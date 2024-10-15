@@ -9,11 +9,13 @@ import { events } from '@/data/events'
 import { useFamily } from '@/context'
 import OurDay from '@/components/OurDay'
 import { format } from 'date-fns'
+
 // For tailwind to pick up the classes
 const colSpans = ['col-span-1', 'col-span-2', 'col-span-3', 'lg:col-span-1', 'lg:col-span-2', 'lg:col-span-3', 'md:col-span-1', 'md:col-span-2', 'md:col-span-3', 'sm:col-span-1', 'sm:col-span-2', 'sm:col-span-3']
+console.log(colSpans)
 
 export function Dashboard() {
-  const { family, activeDate } = useFamily()
+  const { activeDate } = useFamily()
   return (
     <Layout>
       <h1 className="text-3xl font-bold text-gun-metal mb-8">Family Dashboard</h1>

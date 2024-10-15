@@ -1,13 +1,13 @@
 import React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, Umbrella, CheckCircle, MapPin, Notebook, Squirrel, Car, User } from 'lucide-react'
+import { AlertCircle, Umbrella, CheckCircle, MapPin, Car, User } from 'lucide-react'
 import { FamilyMemberType } from '@/data/familymembers'
 import { useFamily } from '@/context'
 import { format } from 'date-fns'
 
 function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
-  const { dayOverviews, activeDate } = useFamily()
+  const { dayOverviews } = useFamily()
   const dayOverview = dayOverviews[member.name]
 
   if (!dayOverview) return null
@@ -125,7 +125,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
 }
 
 export default function OurDay() {
-  const { family, dayOverviews, activeDate } = useFamily()
+  const { family, dayOverviews } = useFamily()
   
   // Sort family members: atypical days first, then alphabetically
   const sortedMembers = [...family.members].sort((a, b) => {

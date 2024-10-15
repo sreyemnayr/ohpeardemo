@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Dialog, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
-import { X, Mail, Calendar, MessageSquare, Mic, Globe, Camera } from 'lucide-react'
+import { X, Mail, Calendar, Globe, Camera } from 'lucide-react'
 
 import { 
     SiGmail as GmailIcon,

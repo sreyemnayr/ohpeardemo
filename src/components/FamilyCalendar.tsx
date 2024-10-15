@@ -1,6 +1,6 @@
 import React from 'react'
 import { FamilyEvent } from '@/data/events'
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addDays, isBefore, startOfDay, getDay, isWithinInterval } from 'date-fns'
+import { format, isSameDay, addDays, isBefore, startOfDay, getDay } from 'date-fns'
 import { useFamily } from '@/context'
 
 type FamilyCalendarProps = {
@@ -45,7 +45,7 @@ export default function FamilyCalendar({ events }: FamilyCalendarProps) {
             <div key={index} className="aspect-square"></div>
           ))}
           {daysInMonth.map(date => {
-            const dayEvents = getEventsForDate(date)
+            // const dayEvents = getEventsForDate(date)
             const specialEvents = getSpecialEventsForDate(date)
             return (
               <div

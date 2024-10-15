@@ -3,10 +3,9 @@
 import Layout from '../components/Layout'
 import Link from 'next/link'
 import AddFeedWizard from '@/components/AddFeedWizard'
-import { Rss, Mailbox, Calendar, MessageCircle, LucideIcon, Mic, Pencil, Wrench, Copy, Plus } from 'lucide-react'
+import { Rss, Wrench, Copy, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { builtin_feeds, custom_feeds } from '@/data/feeds'
-import { SiGmail as GmailIcon } from '@icons-pack/react-simple-icons'
 
 
 export function Feeds() {

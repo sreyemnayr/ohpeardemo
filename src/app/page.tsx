@@ -1,6 +1,5 @@
 'use client'
 
-import Image from "next/image";
 import Dashboard from "@/components/Dashboard";
 import { FamilyProvider } from "@/context";
 

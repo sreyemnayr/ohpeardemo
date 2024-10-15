@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { family, FamilyMemberType, FamilyType } from '@/data/familymembers'
+import { family, FamilyType } from '@/data/familymembers'
 import { events, FamilyEvent, packingLists, PackingLists, PackingListItem } from '@/data/events'
-import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isWithinInterval, addDays } from 'date-fns'
+import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, addDays } from 'date-fns'
 
 type DayOverview = {
   isTypical: boolean
@@ -56,7 +56,7 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
 
     const today = new Date()
 
-    const is_today = isSameDay(today, activeDate)
+    // const is_today = isSameDay(today, activeDate)
     const is_tomorrow = isSameDay(addDays(today, 1), activeDate)
 
     const weather_considerations = is_tomorrow ? ["RAIN"] : []

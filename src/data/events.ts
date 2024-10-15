@@ -8,7 +8,6 @@ import {
     getDay,
     setMinutes,
     isSameDay,
-    addHours
  } from 'date-fns'
 
 export type FamilyEvent = {
@@ -54,7 +53,7 @@ const mom = family.members.find(member => member.name === 'Mom') as FamilyMember
 for (const day of daysInMonth) {
     const is_today = isSameDay(day, today)
     const is_weekday = getDay(day) >= 1 && getDay(day) <= 5
-    const is_weekend = getDay(day) === 0 || getDay(day) === 6
+    // const is_weekend = getDay(day) === 0 || getDay(day) === 6
 
     const random_special = Math.random() < 0.15
 
