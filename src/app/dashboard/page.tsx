@@ -1,10 +1,8 @@
 'use client'
 
-import Image from "next/image";
 import Dashboard from "@/components/Dashboard";
 import { FamilyProvider } from "@/context";
-
-export default function Home() {
+export default function DashboardPage() {
   return (
     <FamilyProvider>
       <Dashboard />

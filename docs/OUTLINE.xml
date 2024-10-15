@@ -1,0 +1,214 @@
+<project>
+  <title>OhPear</title>
+  <description>OhPear is a platform for busy families to manage household responsibilities. Harnessing the power of AI/LLMs, it condenses information from multiple sources into a single, centralized platform that provides intelligent notifications, automated scheduling, and organizational tools to streamline family life.</description>
+  <features>
+    <feature type="integration">
+      <description>Connects seamlessly with e-mail, calendar, and messaging apps to gather and utilize family-related information.</description>
+    </feature>
+    <feature type="automation">
+      <description>Books appointments directly onto calendars, coordinating with each family member’s schedule.</description>
+    </feature>
+    <feature type="notifications">
+      <description>Automatically sends reminders and intelligent notifications, tailored to each family member’s role and preferences.</description>
+    </feature>
+    <feature type="organizational tools">
+      <description>Creates and manages family-optimized to-do lists, shopping lists, meal plans, and packing lists.</description>
+    </feature>
+    <feature type="alignment">
+      <description>Centralizes family scheduling and organization, ensuring all members have access to updated information.</description>
+    </feature>
+    <feature type="differentiation">
+      <description>Focuses specifically on busy parents, emphasizing total household management in a single application.</description>
+    </feature>
+  </features>
+ 
+  <vision-and-strategic-goals>
+    <goal>To empower busy families by providing a centralized, intelligent platform that streamlines household management and communication.</goal>
+    <target-audience>Busy parents seeking efficient, integrated technology to manage and simplify household responsibilities.</target-audience>
+    <desired-outcomes>Simplify family organization processes, reduce time spent on household coordination, and enhance family communication.</desired-outcomes>
+    <differentiation>Leverages advanced AI capabilities to deliver unmatched organization efficiency.</differentiation>
+  </vision-and-strategic-goals>
+
+  <visual-identity>
+    <name>OhPear</name>
+    <color-palette>
+      <color name="dark-tangerine" value="#ff9f1c"/>
+      <color name="sea-buckthorn" value="#ffbf69"/>
+      <color name="white" value="#ffffff"/>
+      <color name="turquoise" value="#cbf3f0"/>
+      <color name="mint" value="#2ec4b6"/>
+      <color name="gun-metal" value="#284b63"/>
+      <color name="raisin-black" value="#353535"/>
+    </color-palette>
+  </visual-identity>
+
+
+  <design-principles>
+    <principle>
+      <description>The platform should be easy to use and navigate.</description>
+    </principle>
+    <principle>
+      <description>The platform should be privacy-focused and secure.</description>
+    </principle>
+    <principle>
+      <description>The platform should be customizable to the family's needs.</description>
+    </principle>
+    <principle>
+      <description>The platform should be easy to maintain and update.</description>
+    </principle>
+    <principle>
+      <description>The platform should be easy to extend with new features.</description>
+    </principle>
+    <principle>
+      <description>The platform should be easy to integrate with other services.</description>
+    </principle>
+    <principle>
+      <description>The platform should look great and be easy to read and use.</description>
+    </principle>
+  </design-principles>
+
+  <data-feeds>
+    <description>Data feeds are used to gather information from family members.</description>
+    <feed type="email-sink">A custom family e-mail address can be used to forward newsletters, invitations, etc. Tags can be added to the email (e.g. "customemail+ballet@tellohpear.com") to help categorize the email appropriately.</feed>
+    <feed type="email-account">A family member's personal e-mail account can be connected to import messages.</feed>
+    <feed type="calendar-account">Family members' personal calendar accounts can be connected to import events.</feed>
+    <feed type="calendar-subscription">ICal calendars can be subscribed to in order to import events.</feed>
+    <feed type="sms-sink">SMS messages sent from family members' registered phone numbers can be forwarded to OhPear and tagged appropriately.</feed>
+    <feed type="voice-call-sink">Voice calls from family members' registered phone numbers can be transcribed.</feed>
+    <feed type="voice-note-sink">Voice notes can be transcribed and sent via the app.</feed>
+    <feed type="url-subscription">Data can be scraped from web URLs (e.g. school/camp/team website) on a schedule.</feed>
+    <feed type="social-media-account">Family members' social media accounts can be connected to import posts.</feed>
+    <feed type="social-media-subscription">Social media posts from relevant sources can be subscribed to on a schedule.</feed>
+    <feed type="photo-share">Photos can be uploaded from family members' devices and analyzed for important information.</feed>
+  </data-feeds>
+  <backend>
+    <overview>The backend will be a dockerized Python/FastAPI application.</overview>
+    <containers>
+      <container type="webserver" name="api">
+        <description>The REST API for other apps to interact with OhPear.</description>
+        <technology>Python/FastAPI</technology>
+      </container>
+      <container type="database" name="database">
+        <description>PostgreSQL database for storing data.</description>
+        <technology>PostgreSQL</technology>
+      </container>
+      <container type="queue" name="mq">
+        <description>Message queue for handling asynchronous tasks.</description>
+        <technology>RabbitMQ</technology>
+      </container>
+      <container type="worker" name="webscraper">
+        <description>Worker container for scraping data from web URLs.</description>
+        <technology>Python/RabbitMQ</technology>
+      </container>
+      <container type="worker" name="socials">
+        <description>Worker container for interacting with social media accounts.</description>
+        <technology>Python/RabbitMQ</technology>
+      </container>
+      <container type="worker" name="llm">
+        <description>Worker container for processing feed data using LLMs.</description>
+        <technology>Python/RabbitMQ</technology>
+      </container>
+      <container type="email" name="email">
+        <description>Email server for sending and receiving emails.</description>
+        <technology>Python/Mailhog</technology>
+      </container>
+      <container type="sms" name="sms">
+        <description>SMS server for sending and receiving SMS messages.</description>
+        <technology>Python/Twilio</technology>
+      </container>
+    </containers>
+  </backend>
+  <frontend>
+    <tech>The frontend will be built in NextJS/TailwindCSS/React and should be able to be deployed as a Progressive Web App and/or React Native mobile app.</tech>
+    <homepage>
+      <description>The homepage will be a simple landing page with a signup/login prompt.</description>
+    </homepage>
+    <loggedin-navigation>
+      <description>The logged in navigation will be consistent on all pages and allow for easy access to all parts of the app.</description>
+    </loggedin-navigation>
+    <dashboard>
+      <description>The main dashboard provides a comprehensive view of family activities, schedules, and notifications.</description>
+      <components>
+        <family-calendar>
+          <description>Displays family-specific events and schedules.</description>
+        </family-calendar>
+        <family-tasks>
+          <description>Displays family-specific tasks and to-do lists.</description>
+        </family-tasks>
+        <family-members>
+          <description>Displays family members and their roles.</description>
+        </family-members>
+        <feeds>
+          <description>Displays summaries of information feeds from family members.</description>
+        </feeds>
+        <questions>
+          <description>Any clarifying questions about the family data.</description>
+        </questions>
+        <chat>
+          <description>Chat with the family data.</description>
+        </chat>
+      </components>
+    </dashboard>
+    <calendar>
+      <description>The calendar view allows users to view and manage family schedules, including appointments, events, and tasks. It is subscribable via iCal.</description>
+    </calendar>
+    <feed-management>
+      <description>Manage data feeds from family members.</description>
+      <components>
+        <data-feeds>
+          <description>View and edit all data feeds, assign them to family members, set the parameters for how often they are refreshed, and view the historical data and actionable summaries from each feed. Provide the ability to manually refresh any feed.</description>
+          <components>
+            <feed-list>
+              <description>View all data feeds.</description>
+            </feed-list>
+            <feed-details>
+              <description>View details of a specific data feed.</description>
+              <components>
+                <feed-summary>
+                  <description>View the historical data and actionable summaries from a specific feed.</description>
+                </feed-summary>
+                <feed-correction>
+                  <description>Identify and make corrections to how the data feed is processed.</description>
+                </feed-correction>
+              </components>
+            </feed-details>
+          </components>
+        </data-feeds>
+      </components>
+    </feed-management>
+    <member-management>
+      <description>Manage family members, their feeds, and their activities.</description>
+      <components>
+        <profile>
+          <description>View and edit family member profiles.</description>
+          <components>
+            <data-feeds>
+              <description>View and edit family member data feeds.</description>
+            </data-feeds>
+            <activities>
+              <description>View and edit family member activities.</description>
+            </activities>
+            <tasks>
+              <description>View and edit family member tasks.</description>
+            </tasks>
+            <notes>
+              <description>View and edit family member notes.</description>
+            </notes>
+            <bio>
+              <description>View and edit family member bios.</description>
+            </bio>
+          </components>
+        </profile>
+        <add-member>
+          <description>Add a new family member.</description>
+        </add-member>
+        <manage-members>
+          <description>Manage family members.</description>
+        </manage-members>
+      </components>
+    </member-management>
+    <child-dashboard>
+      <description>A simple dashboard for family members to view their own activities, schedules, and notifications. Should be child-friendly, highly visual, and easy to understand. Any significant changes should require parental approval.</description>
+    </child-dashboard>
+  </frontend>
+</project>
