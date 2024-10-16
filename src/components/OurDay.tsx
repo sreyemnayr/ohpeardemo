@@ -28,7 +28,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
             <User className="w-12 h-12 text-mint" />
           </div>
         )}
-          <span className="absolute -top-2 -right-4 mx-auto bg-gun-metal text-white rounded-full px-2 py-1 text-sm">{member.name}</span>
+          <span className="absolute top-1/2 -right-1/4 mx-auto bg-gun-metal text-white rounded-full px-2 py-1 text-sm">{member.name}</span>
           </div>
           <span className="text-sm text-raisin-black font-light flex flex-col justify-items-center items-end">
             

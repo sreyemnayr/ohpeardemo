@@ -1,13 +1,35 @@
 import { LucideIcon } from "lucide-react";
 import { Mailbox, MessageCircle, Calendar, Mic } from "lucide-react";
 
+export type FeedType = 'Email' | 'SMS' | 'Voice' | 'Calendar' | 'Contacts' | 'Social' | 'Integration'
+
+type FeedOptions = {
+  type: 'input' | 'checkbox' | 'select' | 'textarea' | 'number' | 'date'
+  label: string
+  description: string
+  default?: string | boolean | number | Date
+  options?: string[]
+  required?: boolean
+}
+
+type IntegrationSourceType = 'GroupMe' | 'Slack' | 'Zoom' | 'Google Calendar' | 'GMail' | 'Google Tasks' | 'Google Contacts' | 'Google Drive' | 'Google Photos' | 'Google Calendar' | 'Google Tasks'
+
+type IntegrationType = {
+  source: IntegrationSourceType
+  options?: FeedOptions[]
+
+}
+
 type Feed = {
     name: string,
-    type: string,
+    type: FeedType,
     description: string,
     id: string,
     Icon: LucideIcon
+    integration?: IntegrationType
+    options?: FeedOptions[]
   }
+
 
 export const builtin_feeds: Feed[] = [
     { name: 'Family E-Mail Sink', type: 'Email', description: 'Send e-mails to this address to tell OhPear about their contents.', id: 'n1go7@tellohpear.com', Icon: Mailbox },

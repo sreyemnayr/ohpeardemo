@@ -80,7 +80,7 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
         end: event.end,
         activity: event.title,
         location: event.location,
-        notes: `Dropoff: ${event.transporting_to?.name ?? "???"}, Pickup: ${event.transporting_from?.name ?? "???"}`
+        notes: `${event.transporting_to ? "Dropoff: " + event.transporting_to?.name + ", " : ""}${event.transporting_from ? "Pickup: " + event.transporting_from?.name : ""}`
       }))
 
       // Generate packing list

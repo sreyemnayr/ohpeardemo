@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Menu, X, Home, Calendar, Users, Rss, MessageSquare } from 'lucide-react'
+import LogoBW from './LogoBW'
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -22,8 +23,9 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/dashboard" className="flex-shrink-0">
-              <span className="text-2xl font-bold text-dark-tangerine">OhPear</span>
+            <Link href="/dashboard" className="flex-shrink-0 flex items-center justify-center">
+              <LogoBW className="h-8 w-8 text-dark-tangerine mr-2" />
+              <span className="text-3xl font-bold text-dark-tangerine font-logo">OhPear!</span>
             </Link>
           </div>
           <div className="hidden md:block">
