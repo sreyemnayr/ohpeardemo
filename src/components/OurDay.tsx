@@ -1,7 +1,7 @@
 import React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, Umbrella, CheckCircle, MapPin, Car, User } from 'lucide-react'
+import { AlertCircle, Umbrella, MapPin, Car, User } from 'lucide-react'
 import { FamilyMemberType } from '@/data/familymembers'
 import { useFamily } from '@/context'
 import { format } from 'date-fns'
@@ -137,8 +137,8 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
 }
 
 export default function OurDay() {
-  const { activeDate, dayOverviews, family } = useFamily()
-  const dayOverview = dayOverviews[format(activeDate, 'yyyy-MM-dd')]
+  const { dayOverviews, family } = useFamily()
+  // const dayOverview = dayOverviews[format(activeDate, 'yyyy-MM-dd')]
 
   // Sort family members: atypical days first, then alphabetically
   const sortedMembers = [...family.members].sort((a, b) => {

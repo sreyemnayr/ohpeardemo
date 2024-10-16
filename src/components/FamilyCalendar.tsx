@@ -111,7 +111,7 @@ function EventList({ title, events, size }: { title: string; events: FamilyEvent
               <span>
               {event.familyMembers.map(member => (
                 
-                <Tooltip.Root>
+                <Tooltip.Root key={`${member.name}-${event.title}-${event.start}`}>
                   <Tooltip.Trigger asChild>
                 
                   {member.photoUrl ? (
