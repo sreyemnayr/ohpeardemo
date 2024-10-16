@@ -58,9 +58,10 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
 
     // const is_today = isSameDay(today, activeDate)
     const is_tomorrow = isSameDay(addDays(today, 1), activeDate)
+    const is_next_week = isSameDay(addDays(today, 7), activeDate)
 
-    const weather_considerations = is_tomorrow ? ["RAIN"] : []
-    
+    const weather_considerations = is_tomorrow ? ["RAIN"] : is_next_week ? ["COLD"] : []
+
     family.members.forEach(member => {
       const memberEvents = events.filter(event => 
         event.familyMembers.some(fm => fm.name === member.name) && 

@@ -5,6 +5,8 @@ import { AlertCircle, Umbrella, CheckCircle, MapPin, Car, User } from 'lucide-re
 import { FamilyMemberType } from '@/data/familymembers'
 import { useFamily } from '@/context'
 import { format } from 'date-fns'
+import Checklist from './Checklist'
+import * as Tooltip from '@radix-ui/react-tooltip'
 
 function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
   const { dayOverviews } = useFamily()
@@ -16,19 +18,33 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
     <Card className="mb-4">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-gun-metal flex justify-between">
-            <div className="relative">
-        {member.photoUrl ? (
-          <img
-            src={member.photoUrl}
-            alt={member.name}
-            className="w-24 h-24 rounded-full object-cover border-8 border-mint"
-          />
-        ) : (
-          <div className="w-24 h-24 rounded-full bg-turquoise flex items-center justify-center border-4 border-mint">
-            <User className="w-12 h-12 text-mint" />
-          </div>
-        )}
-          <span className="absolute top-1/2 -right-1/4 mx-auto bg-gun-metal text-white rounded-full px-2 py-1 text-sm">{member.name}</span>
+          <div className="relative">
+            
+              <Tooltip.Root>
+                <Tooltip.Trigger asChild>
+                  {member.photoUrl ? (
+                    <img
+                      src={member.photoUrl}
+                      alt={member.name}
+                      className="w-24 h-24 rounded-full object-cover border-8 border-mint cursor-pointer"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full bg-turquoise flex items-center justify-center border-4 border-mint cursor-pointer">
+                      <User className="w-12 h-12 text-mint" />
+                    </div>
+                  )}
+                </Tooltip.Trigger>
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    className="bg-gun-metal text-white px-2 py-1 rounded text-sm"
+                    sideOffset={5}
+                  >
+                    {member.name}
+                    <Tooltip.Arrow className="fill-gun-metal" />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
+              </Tooltip.Root>
+            <span className="absolute top-1/2 -right-1/4 mx-auto bg-gun-metal text-white rounded-full px-2 py-1 text-sm">{member.name}</span>
           </div>
           <span className="text-sm text-raisin-black font-light flex flex-col justify-items-center items-end">
             
@@ -98,11 +114,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
               {dayOverview.packingList.length > 0 && (
                 <>
                   <h4 className="text-sm font-semibold text-gun-metal mb-2">Packing List:</h4>
-                  <ul className="list-none flex flex-wrap items-center justify-center text-sm text-raisin-black mb-4" >
-                    {dayOverview.packingList.map((item, index) => (
-                      <li key={index} className="mr-4"><CheckCircle className="w-3 h-3 mr-1 inline-block" />{item}</li>
-                    ))}
-                  </ul>
+                  <Checklist items={dayOverview.packingList} />
                 </>
               )}
 
@@ -125,8 +137,9 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
 }
 
 export default function OurDay() {
-  const { family, dayOverviews } = useFamily()
-  
+  const { activeDate, dayOverviews, family } = useFamily()
+  const dayOverview = dayOverviews[format(activeDate, 'yyyy-MM-dd')]
+
   // Sort family members: atypical days first, then alphabetically
   const sortedMembers = [...family.members].sort((a, b) => {
     const aTypical = dayOverviews[a.name]?.isTypical
@@ -137,12 +150,62 @@ export default function OurDay() {
     return aTypical ? 1 : -1
   })
 
+  const no_events = sortedMembers.filter(member => !dayOverviews[member.name]?.hourlySchedule.length && !dayOverviews[member.name]?.atypicalEvents.length)
+
   return (
     <div className="space-y-6">
       
-      {sortedMembers.map((member) => (
+      {sortedMembers.filter(member => !no_events.includes(member)).map((member) => (
         <FamilyMemberDay key={member.name} member={member} />
       ))}
+      {no_events.length > 0 && (
+        <Card className="mb-4">
+        <CardHeader>
+          <CardTitle className="text-2xl font-semibold text-gun-metal flex justify-between">
+          {no_events.map(member => (
+        <div className="relative" key={`noevents-${member.name}-photo`}>
+        <Tooltip.Provider>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              {member.photoUrl ? (
+                <img
+                  src={member.photoUrl}
+                  alt={member.name}
+                  className="w-24 h-24 rounded-full object-cover border-8 border-mint cursor-pointer"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full bg-turquoise flex items-center justify-center border-4 border-mint cursor-pointer">
+                  <User className="w-12 h-12 text-mint" />
+                </div>
+              )}
+            </Tooltip.Trigger>
+            <Tooltip.Portal>
+              <Tooltip.Content
+                className="bg-gun-metal text-white px-2 py-1 rounded text-sm"
+                sideOffset={5}
+              >
+                {member.name}
+                <Tooltip.Arrow className="fill-gun-metal" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          </Tooltip.Root>
+        </Tooltip.Provider>
+        </div>
+        ))}
+              
+            
+          </CardTitle>
+             
+        </CardHeader>
+        <CardContent>
+        <div className="text-center text-gun-metal">
+          <div className="text-xl font-semibold">No events today:</div><div className="text-lg"> {no_events.map(member => member.name).join(', ')}</div>
+        </div>
+
+        </CardContent>
+      </Card>
+      )}
+      
     </div>
   )
 }

@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Menu, X, Home, Calendar, Users, Rss, MessageSquare } from 'lucide-react'
-import LogoBW from './LogoBW'
+import LogoColor from './LogoColor'
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
@@ -23,9 +25,11 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/dashboard" className="flex-shrink-0 flex items-center justify-center">
-              <LogoBW className="h-8 w-8 text-dark-tangerine mr-2" />
-              <span className="text-3xl font-bold text-dark-tangerine font-logo">OhPear!</span>
+            <Link href="/dashboard" className="relative flex-shrink-0 flex items-center justify-center group text-dark-tangerine">
+              <LogoColor className="h-8 w-8 mr-2 opacity-100 absolute top-0 left-0 group-hover:h-10 group-hover:w-10  group-hover:-top-1  group-hover:-left-1 transition-all duration-300" />
+              <span className="font-logo ml-9 ">
+                <span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all duration-300 delay-100">Oh</span><span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all delay-200 duration-300">Pear</span><span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all delay-300 duration-300">!</span>
+              </span>
             </Link>
           </div>
           <div className="hidden md:block">
@@ -34,7 +38,11 @@ export function Navigation() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-mint hover:text-raisin-black transition-colors duration-200"
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200
+                    ${pathname === item.href
+                      ? 'text-sea-buckthorn'
+                      : 'text-white hover:bg-mint hover:text-raisin-black'
+                    }`}
                 >
                   <item.icon className="inline-block w-5 h-5 mr-1" />
                   {item.name}
@@ -63,7 +71,11 @@ export function Navigation() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-mint hover:text-raisin-black transition-colors duration-200"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200
+                  ${pathname === item.href
+                    ? 'text-sea-buckthorn'
+                    : 'text-white hover:bg-mint hover:text-raisin-black'
+                  }`}
               >
                 <item.icon className="inline-block w-5 h-5 mr-1" />
                 {item.name}

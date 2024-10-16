@@ -49,6 +49,7 @@ const bingo = family.members.find(member => member.name === 'Bingo') as FamilyMe
 const muffin = family.members.find(member => member.name === 'Muffin') as FamilyMemberType
 const dad = family.members.find(member => member.name === 'Dad') as FamilyMemberType
 const mom = family.members.find(member => member.name === 'Mom') as FamilyMemberType
+const uncle_rad = family.members.find(member => member.name === 'Uncle Rad') as FamilyMemberType
 
 for (const day of daysInMonth) {
     const is_today = isSameDay(day, today)
@@ -136,12 +137,24 @@ for (const day of daysInMonth) {
             transporting_from: dad
         })
     }
+    if (getDay(day) === 5) {
+        events.push({
+            start: setHours(day, 18),
+            end: setHours(day, 21),
+            title: "Babysitter",
+            familyMembers: [bluey],
+            wholeFamily: false,
+            location: "3400 Louisiana Avenue Pkwy.",
+            transporting_from: uncle_rad,
+            transporting_to: uncle_rad
+        })
+    }
     if (getDay(day) === 0) {
         events.push({
             start: setHours(day, 9),
             end: setHours(day, 11),
             title: "Hope House",
-            familyMembers: family.members,
+            familyMembers: family.members.filter(member => member.role === "Parent" || member.role === "Child"),
             wholeFamily: true,
             location: "916 St Andrew St.",
             transporting_to: mom,
@@ -176,7 +189,8 @@ const packingLists: PackingLists = {
         "default": ["Lunch", "Water Bottle", "Backpack"],
         "Bluey": ["Binder", "Snack"],
         "Muffin": ["Diaper Bag", "Extra Clothes"],
-        "RAIN" : ["Umbrella"]
+        "RAIN" : ["Umbrella"],
+        "COLD": ["Jacket"]
     }
 }
 
