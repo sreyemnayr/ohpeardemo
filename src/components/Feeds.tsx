@@ -1,6 +1,5 @@
 'use client'
 
-import Layout from '../components/Layout'
 import Link from 'next/link'
 import AddFeedWizard from '@/components/AddFeedWizard'
 import { Rss, Wrench, Copy, Plus } from 'lucide-react'
@@ -15,7 +14,7 @@ export function Feeds() {
 
 
   return (
-    <Layout>
+    <>
       <h1 className="text-3xl font-bold text-gun-metal mb-8">Information Feeds</h1>
       <h2 className="text-lg font-medium text-gun-metal mb-4"><Rss className="inline w-6 h-6 mr-2" /> Built-in feeds</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -81,7 +80,7 @@ export function Feeds() {
         </div>
       </div>
       <AddFeedWizard isOpen={isAddFeedWizardOpen} onClose={() => setIsAddFeedWizardOpen(false)} />
-    </Layout>
+    </>
   )
 }
 

@@ -1,6 +1,6 @@
 'use client'
 
-import Layout from '@/components/Layout'
+import { Chat } from '@/components/Chat'
 import FamilyCalendar from '@/components/FamilyCalendar'
 import FamilyMember from '@/components/FamilyMember'
 import { familyMembers } from '@/data/familymembers'
@@ -17,7 +17,7 @@ console.log(colSpans)
 export function Dashboard() {
   const { activeDate } = useFamily()
   return (
-    <Layout>
+    <>
       <h1 className="text-3xl font-bold text-gun-metal mb-8">Family Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <DashboardCard title="Family Calendar" icon={Calendar}>
@@ -25,6 +25,9 @@ export function Dashboard() {
         </DashboardCard>
         <DashboardCard title={format(activeDate, 'EEEE, MMMM d, yyyy')} icon={CheckSquare} colSpan={2}>
           <OurDay />
+        </DashboardCard>
+        <DashboardCard title="OhPear Chat" icon={MessageCircle}>
+          <Chat />
         </DashboardCard>
         <DashboardCard title="Family Members" icon={Users}>
           {familyMembers.map((familyMember) => (
@@ -37,11 +40,9 @@ export function Dashboard() {
         <DashboardCard title="Questions" icon={HelpCircle}>
           <p className="text-sm text-raisin-black">Get clarification on family data</p>
         </DashboardCard>
-        <DashboardCard title="Family Chat" icon={MessageCircle}>
-          <p className="text-sm text-raisin-black">Communicate with your family AI assistant</p>
-        </DashboardCard>
+        
       </div>
-    </Layout>
+    </>
   )
 }
 

@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@anysphere/priompt": "^0.2.1",
+    "@anysphere/tiktoken-node": "^0.2.1",
     "@headlessui/react": "^2.1.10",
     "@icons-pack/react-simple-icons": "^10.0.0",
     "@radix-ui/react-accordion": "^1.2.1",
@@ -19,12 +21,15 @@
     "date-fns": "^4.1.0",
     "lucide-react": "^0.451.0",
     "next": "14.2.15",
+    "openai": "^4.67.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^9.0.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@anysphere/priompt-preview": "^0.2.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -33,6 +38,11 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "eslintConfig": {
+    "rules": {
+      "no-unused-vars": "off"
+    }
   },
   "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }

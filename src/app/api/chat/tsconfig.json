@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "outDir": "./dist",
+      "strictNullChecks": true,
+      "noImplicitAny": true,
+      "declaration": true,
+      "isolatedModules": true,
+      "target": "es2022",
+      "moduleResolution": "node",
+      "jsx": "react",
+      "jsxFactory": "Priompt.createElement",
+      "jsxFragmentFactory": "Priompt.Fragment",
+      "strictPropertyInitialization": true
+    }
+  }
+  

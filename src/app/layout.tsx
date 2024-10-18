@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+import {Layout} from "@/components/Layout"
 
 const quicksand = Quicksand({
   subsets: ['latin'],
@@ -26,7 +27,9 @@ export default function RootLayout({
       </head>
       <body className={`${quicksand.variable} font-sans`}>
         <TooltipProvider delayDuration={100}>
-          {children}
+          <Layout>
+            {children}
+          </Layout>
         </TooltipProvider>
       </body>
     </html>

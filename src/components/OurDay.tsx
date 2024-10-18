@@ -7,6 +7,7 @@ import { useFamily } from '@/context'
 import { format } from 'date-fns'
 import Checklist from './Checklist'
 import * as Tooltip from '@radix-ui/react-tooltip'
+import LogoBW from './LogoBW'
 
 function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
   const { dayOverviews } = useFamily()
@@ -18,7 +19,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
     <Card className="mb-4">
       <CardHeader>
         <CardTitle className="text-2xl font-semibold text-gun-metal flex justify-between">
-          <div className="relative">
+          <div className="relative -mt-8 -ml-8 ">
             
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
@@ -26,7 +27,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
                     <img
                       src={member.photoUrl}
                       alt={member.name}
-                      className="w-24 h-24 rounded-full object-cover border-8 border-mint cursor-pointer"
+                      className="w-24 h-24 rounded-3xl object-contain border-8  aspect-square border-mint cursor-pointer"
                     />
                   ) : (
                     <div className="w-24 h-24 rounded-full bg-turquoise flex items-center justify-center border-4 border-mint cursor-pointer">
@@ -44,11 +45,13 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
                   </Tooltip.Content>
                 </Tooltip.Portal>
               </Tooltip.Root>
-            <span className="absolute top-1/2 -right-1/4 mx-auto bg-gun-metal text-white rounded-full px-2 py-1 text-sm">{member.name}</span>
+            {/* <span className="absolute top-1/2 -right-1/4 mx-auto bg-gun-metal text-white rounded-full px-2 py-1 text-sm">{member.name}</span> */}
           </div>
           <span className="text-sm text-raisin-black font-light flex flex-col justify-items-center items-end">
             
-            <span>{dayOverview.summary}</span>
+            <span>{dayOverview.atypicalEvents.length > 0 && (
+                <LogoBW className="w-6 h-6 inline-block text-dark-tangerine" />
+            )}{dayOverview.summary} for <span className="font-semibold text-xl">{member.name}</span></span>
             {dayOverview.atypicalEvents.length > 0 && (
           <div className="mb-2">
             {dayOverview.atypicalEvents.map((event, index) => (
@@ -164,7 +167,7 @@ export default function OurDay() {
           <CardTitle className="text-2xl font-semibold text-gun-metal flex justify-between">
           {no_events.map(member => (
         <div className="relative" key={`noevents-${member.name}-photo`}>
-        <Tooltip.Provider>
+        
           <Tooltip.Root>
             <Tooltip.Trigger asChild>
               {member.photoUrl ? (
@@ -189,7 +192,7 @@ export default function OurDay() {
               </Tooltip.Content>
             </Tooltip.Portal>
           </Tooltip.Root>
-        </Tooltip.Provider>
+        
         </div>
         ))}
               

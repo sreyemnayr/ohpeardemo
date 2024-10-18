@@ -51,12 +51,19 @@ const dad = family.members.find(member => member.name === 'Dad') as FamilyMember
 const mom = family.members.find(member => member.name === 'Mom') as FamilyMemberType
 const uncle_rad = family.members.find(member => member.name === 'Uncle Rad') as FamilyMemberType
 
+function seededRandom(seed: number) {
+    const x = Math.sin(seed*12345) * 10000;
+    return x - Math.floor(x);
+}
+
 for (const day of daysInMonth) {
     const is_today = isSameDay(day, today)
     const is_weekday = getDay(day) >= 1 && getDay(day) <= 5
     // const is_weekend = getDay(day) === 0 || getDay(day) === 6
 
-    const random_special = Math.random() < 0.15
+    const random_special = seededRandom(Number(today) + Number(day) + getDay(day)) < 0.15
+
+    console.log(seededRandom(Number(today) + Number(day) + getDay(day)))
 
     
     if (is_weekday) {

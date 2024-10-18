@@ -148,8 +148,8 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
       newDayOverviews[member.name] = {
         isTypical,
         summary: isTypical 
-          ? `${member.name}'s day is a typical ${format(activeDate, 'EEEE')}`
-          : `${member.name}'s ${format(activeDate, 'EEEE')} is a little different than usual`,
+          ? `${format(activeDate, 'EEEE')} as usual`
+          : `${format(activeDate, 'EEEE')} is a little different than usual`,
         hourlySchedule,
         packingList: Array.from(packingList),
         otherNotes: [],
