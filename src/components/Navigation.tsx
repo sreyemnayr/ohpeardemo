@@ -28,7 +28,7 @@ export function Navigation() {
             <Link href="/dashboard" className="relative flex-shrink-0 flex items-center justify-center group text-dark-tangerine">
               <LogoColor className="h-8 w-8 mr-2 opacity-100 absolute top-0 left-0 group-hover:h-10 group-hover:w-10  group-hover:-top-1  group-hover:-left-1 transition-all duration-300" />
               <span className="font-logo ml-9 ">
-                <span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all duration-300 delay-100">Oh</span><span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all delay-200 duration-300">Pear</span><span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all delay-300 duration-300">!</span>
+                <span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all duration-150 delay-75">Oh</span><span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all delay-150 duration-150">Pear</span><span className="text-3xl group-hover:text-4xl font-bold  group-hover:text-sea-buckthorn transition-all delay-225 duration-150">!</span>
               </span>
             </Link>
           </div>

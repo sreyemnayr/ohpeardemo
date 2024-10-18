@@ -10,7 +10,10 @@ import {
     isSameDay,
  } from 'date-fns'
 
+ import shortHash from "shorthash2";
+
 export type FamilyEvent = {
+    id: string
     start: Date
     end: Date
     title: string
@@ -44,6 +47,8 @@ const daysInMonth = eachDayOfInterval({ start: start, end: end })
 
 const events: FamilyEvent[] = []
 
+let event_id = 0
+
 const bluey = family.members.find(member => member.name === 'Bluey') as FamilyMemberType
 const bingo = family.members.find(member => member.name === 'Bingo') as FamilyMemberType
 const muffin = family.members.find(member => member.name === 'Muffin') as FamilyMemberType
@@ -68,6 +73,7 @@ for (const day of daysInMonth) {
     
     if (is_weekday) {
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 8),
             end: setHours(day, 15),
             title: "School",
@@ -82,6 +88,7 @@ for (const day of daysInMonth) {
 
     if (getDay(day) === dayOfWeek) {
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 16),
             end: setHours(day, 17),
             title: "Cheerleading Practice",
@@ -91,6 +98,7 @@ for (const day of daysInMonth) {
             transporting_from: mom,
         })
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 18),
             end: setHours(day, 19),
             title: "Ballet Class",
@@ -104,6 +112,7 @@ for (const day of daysInMonth) {
     }
     if (getDay(day) === dayOfWeek + offset) {
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 16),
             end: setHours(day, 17),
             title: "Cheerleading Practice",
@@ -113,6 +122,7 @@ for (const day of daysInMonth) {
             transporting_from: mom
         })
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 18),
             end: setHours(day, 19),
             title: "Ballet Class",
@@ -123,6 +133,7 @@ for (const day of daysInMonth) {
             transporting_from: mom
         })
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setMinutes(setHours(day, 16), 15),
             end: setHours(day, 17),
             title: "Ballet Class",
@@ -135,6 +146,7 @@ for (const day of daysInMonth) {
     }
     if (getDay(day) === dayOfWeek + (offset/2)) {
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setMinutes(setHours(day, 16), 15),
             end: setMinutes(setHours(day, 18), 15),
             title: "Aftercare",
@@ -146,6 +158,7 @@ for (const day of daysInMonth) {
     }
     if (getDay(day) === 5) {
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 18),
             end: setHours(day, 21),
             title: "Babysitter",
@@ -153,11 +166,13 @@ for (const day of daysInMonth) {
             wholeFamily: false,
             location: "3400 Louisiana Avenue Pkwy.",
             transporting_from: uncle_rad,
-            transporting_to: uncle_rad
+            transporting_to: uncle_rad,
+            special: true
         })
     }
     if (getDay(day) === 0) {
         events.push({
+            id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 9),
             end: setHours(day, 11),
             title: "Hope House",

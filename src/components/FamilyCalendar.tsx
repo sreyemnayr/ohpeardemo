@@ -4,12 +4,9 @@ import { format, isSameDay, addDays, isBefore, startOfDay, getDay } from 'date-f
 import { useFamily } from '@/context'
 import * as Tooltip from '@radix-ui/react-tooltip'
 
-type FamilyCalendarProps = {
-  events: FamilyEvent[]
-}
 
-export default function FamilyCalendar({ events }: FamilyCalendarProps) {
-  const { activeDate, setActiveDate, daysInMonth } = useFamily()
+export default function FamilyCalendar() {
+  const { activeDate, setActiveDate, daysInMonth, events } = useFamily()
   const actuallyToday = startOfDay(new Date())
   const today = activeDate
 

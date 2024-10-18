@@ -16,10 +16,10 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
   if (!dayOverview) return null
 
   return (
-    <Card className="mb-4">
+    <Card className="mb-2">
       <CardHeader>
-        <CardTitle className="text-2xl font-semibold text-gun-metal flex justify-between">
-          <div className="relative -mt-8 -ml-8 ">
+        <CardTitle className="text-2xl font-semibold text-gun-metal flex flex-col lg:flex-row justify-center align-middle items-center lg:justify-between">
+          <div className="min-w-12">
             
               <Tooltip.Root>
                 <Tooltip.Trigger asChild>
@@ -27,10 +27,10 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
                     <img
                       src={member.photoUrl}
                       alt={member.name}
-                      className="w-24 h-24 rounded-3xl object-contain border-8  aspect-square border-mint cursor-pointer"
+                      className="w-24 rounded-3xl object-contain border-2 shadow-md shadow-turquoise  aspect-square border-mint cursor-pointer"
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full bg-turquoise flex items-center justify-center border-4 border-mint cursor-pointer">
+                    <div className="w-24 rounded-full bg-turquoise flex items-center justify-center border-4 border-mint cursor-pointer">
                       <User className="w-12 h-12 text-mint" />
                     </div>
                   )}
@@ -47,19 +47,24 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
               </Tooltip.Root>
             {/* <span className="absolute top-1/2 -right-1/4 mx-auto bg-gun-metal text-white rounded-full px-2 py-1 text-sm">{member.name}</span> */}
           </div>
-          <span className="text-sm text-raisin-black font-light flex flex-col justify-items-center items-end">
+          <span className="text-sm text-raisin-black font-light flex flex-col justify-items-center items-center lg:items-end">
             
-            <span>{dayOverview.atypicalEvents.length > 0 && (
-                <LogoBW className="w-6 h-6 inline-block text-dark-tangerine" />
+            <span className="text-center lg:text-right leading-none">{dayOverview.atypicalEvents.length > 0 && (
+                <LogoBW className="w-6 h-6 inline-block text-dark-tangerine " />
             )}{dayOverview.summary} for <span className="font-semibold text-xl">{member.name}</span></span>
             {dayOverview.atypicalEvents.length > 0 && (
           <div className="mb-2">
             {dayOverview.atypicalEvents.map((event, index) => (
-                <span key={index} className="ml-3 text-right"><span className="text-dark-tangerine"><AlertCircle className="w-4 h-4 mr-1  inline-block" /></span> {event}</span>
+                <span key={index} className="ml-3 text-center lg:text-right"><span className="text-dark-tangerine"><AlertCircle className="w-4 h-4 mr-1  inline-block" /></span> {event}</span>
               ))}
             
           </div>
         )}
+        <div className="flex flex-row flex-wrap justify-end">
+        {dayOverview.hourlySchedule.map((event, index) => {
+          return (<div key={index} className="inline-block"><span className=" text-mint text-xs p-1">{format(event.start, `h:mmaaaaa'm'`)}</span><span>{event.activity}</span></div>)
+        })}
+        </div>
             </span>
         </CardTitle>
            
@@ -69,7 +74,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
         
 
         {dayOverview.weatherConsiderations.length > 0 && (
-          <div className="mb-2">
+          <div className="mb-1">
             <h4 className="text-sm font-semibold text-mint flex items-center">
               <Umbrella className="w-4 h-4 mr-1" /> Weather Considerations:
             </h4>
@@ -81,7 +86,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
           </div>
         )}
 
-        <Accordion type="single" collapsible className="mt-4">
+        <Accordion type="single" collapsible className="mt-2">
           <AccordionItem value="details">
             <AccordionTrigger className="text-sm font-semibold text-white bg-mint px-4">
               Full Day Details

@@ -20,6 +20,8 @@ interface FamilyContextType {
   setActiveDate: React.Dispatch<React.SetStateAction<Date>>
   daysInMonth: Date[]
   dayOverviews: Record<string, DayOverview>
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  updateEvent: (newEvent: FamilyEvent | Record<string, any>) => void
 }
 
 const FamilyContext = createContext<FamilyContextType | undefined>(undefined)
@@ -36,6 +38,8 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
   const [activeDate, setActiveDate] = useState<Date>(new Date())
   const [daysInMonth, setDaysInMonth] = useState<Date[]>([])
   const [dayOverviews, setDayOverviews] = useState<Record<string, DayOverview>>({})
+
+  const [_events, setEvents] = useState<FamilyEvent[]>(events)
 
   useEffect(() => {
     const today = new Date()
@@ -63,12 +67,12 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     const weather_considerations = is_tomorrow ? ["RAIN"] : is_next_week ? ["COLD"] : []
 
     family.members.forEach(member => {
-      const memberEvents = events.filter(event => 
+      const memberEvents = _events.filter(event => 
         event.familyMembers.some(fm => fm.name === member.name) && 
         (isSameDay(activeDate, event.start) || isSameDay(activeDate, event.end))
       )
 
-      const transportingEvents = events.filter(event => (isSameDay(activeDate, event.start) || isSameDay(activeDate, event.end)) && (event.transporting_to?.name === member.name || event.transporting_from?.name === member.name))
+      const transportingEvents = _events.filter(event => (isSameDay(activeDate, event.start) || isSameDay(activeDate, event.end)) && (event.transporting_to?.name === member.name || event.transporting_from?.name === member.name))
 
       const isTypical = !memberEvents.some(event => event.adjustments && event.adjustments.length > 0) && !transportingEvents.some(event => event.adjustments && event.adjustments.length > 0)
 
@@ -159,17 +163,23 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     })
 
     setDayOverviews(newDayOverviews)
-  }, [activeDate, family, events])
+  }, [activeDate, family, _events])
+
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  const updateEvent = (newEvent: FamilyEvent | Record<string, any>) => {
+    setEvents(_events.map(event => event.id === newEvent.id ? {...event, ...newEvent} : event))
+  }
 
   return (
     <FamilyContext.Provider
       value={{
         family,
-        events,
+        events: _events,
         activeDate,
         setActiveDate,
         daysInMonth,
-        dayOverviews
+        dayOverviews,
+        updateEvent
       }}
     >
       {children}

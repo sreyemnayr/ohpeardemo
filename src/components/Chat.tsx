@@ -4,16 +4,24 @@ import { useState, useRef, useEffect } from 'react'
 import { Send } from 'lucide-react'
 import Markdown from "react-markdown"
 
+import { useFamily } from '@/context'
+import { ParsedTag } from '@/util/parseTags'
+
 type Message = {
   text: string
-  sender: 'user' | 'assistant'
+  sender: 'user' | 'assistant' | 'update'
 }
 
 export function Chat() {
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>([{
+    text: "Hello! How can I help you today?",
+    sender: 'assistant'
+  }])
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const { updateEvent } = useFamily()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" })
@@ -41,7 +49,24 @@ export function Chat() {
       method: 'POST',
       body: JSON.stringify({ message: message }),
     }).then(res => res.json()).then(data => {
-      setMessages(prevMessages => [...prevMessages.filter(msg => msg.text !== waitingAssistantMessage.text), { text: data.message, sender: 'assistant' }])
+      const new_messages: Message[] = []
+      
+      if (data?.commands) {
+        (data.commands as ParsedTag[]).forEach(command => {
+          if (command.name === "update") {
+            if (command.params?.type === "cancellation") {
+              if (command.params?.id) {
+                updateEvent({id: command.params.id, adjustments: ["CANCELLED"]})
+              }
+            }
+          }
+          if (command?.content) {
+            new_messages.push({ text: command.content, sender: 'update' })
+          }
+        })
+      }
+      new_messages.push({ text: data.message, sender: 'assistant' })
+      setMessages(prevMessages => [...prevMessages.filter(msg => msg.text !== waitingAssistantMessage.text), ...new_messages])
     })
 
     // Simulate assistant response
@@ -53,16 +78,15 @@ export function Chat() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-gun-metal mb-8">Family Chat</h1>
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="h-96 bg-turquoise rounded-lg mb-4 p-4 overflow-y-scroll flex flex-col">
+      <div className="bg-white shadow rounded-lg p-2">
+        <div className="h-96 bg-turquoise rounded-lg mb-4 p-4 overflow-y-auto flex flex-col">
           {messages.map((msg, index) => (
-            <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
+            <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4 text-sm`}>
               <Markdown 
-                className={`max-w-[70%] p-3 rounded-lg ${
+                className={`${msg.sender === 'update' ? 'text-xs w-full' : 'text-sm max-w-[85%]'}  p-3 rounded-lg ${
                   msg.sender === 'user' 
                     ? 'bg-mint text-white rounded-br-none' 
-                    : 'bg-white text-gun-metal rounded-bl-none'
+                    : msg.sender === 'assistant' ? 'bg-white text-gun-metal rounded-bl-none' : 'bg-gun-metal text-white rounded shadow-md outline outline-1 outline-white text-xs '
                 }`}
               >
                 {msg.text}

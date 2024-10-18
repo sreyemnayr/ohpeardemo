@@ -5,7 +5,7 @@ import FamilyCalendar from '@/components/FamilyCalendar'
 import FamilyMember from '@/components/FamilyMember'
 import { familyMembers } from '@/data/familymembers'
 import { Calendar, CheckSquare, Users, Rss, HelpCircle, MessageCircle } from 'lucide-react'
-import { events } from '@/data/events'
+// import { events } from '@/data/events'
 import { useFamily } from '@/context'
 import OurDay from '@/components/OurDay'
 import { format } from 'date-fns'
@@ -21,7 +21,7 @@ export function Dashboard() {
       <h1 className="text-3xl font-bold text-gun-metal mb-8">Family Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <DashboardCard title="Family Calendar" icon={Calendar}>
-          <FamilyCalendar events={events} />
+          <FamilyCalendar />
         </DashboardCard>
         <DashboardCard title={format(activeDate, 'EEEE, MMMM d, yyyy')} icon={CheckSquare} colSpan={2}>
           <OurDay />
