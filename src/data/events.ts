@@ -68,9 +68,6 @@ for (const day of daysInMonth) {
 
     const random_special = seededRandom(Number(today) + Number(day) + getDay(day)) < 0.15
 
-    console.log(seededRandom(Number(today) + Number(day) + getDay(day)))
-
-    
     if (is_weekday) {
         events.push({
             id: shortHash(`event_${seededRandom(event_id++)}`),

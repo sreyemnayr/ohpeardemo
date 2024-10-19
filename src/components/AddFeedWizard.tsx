@@ -46,7 +46,7 @@ export default function AddFeedWizard({ isOpen, onClose }: { isOpen: boolean; on
 
   const handleGoogleAuth = () => {
     // In a real application, you would initiate the Google OAuth flow here
-    console.log('Initiating Google Auth')
+    // console.log('Initiating Google Auth')
     // After successful authentication, you would receive an access token
     // For this example, we'll simulate receiving a token
     setFeedDetails({ ...feedDetails, authToken: 'simulated-google-auth-token' })

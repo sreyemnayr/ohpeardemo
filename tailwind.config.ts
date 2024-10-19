@@ -1,14 +1,20 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-    darkMode: ["class"],
-    content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+  darkMode: ['class'],
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    'col-span-1', 'col-span-2', 'col-span-3',
+    'lg:col-span-1', 'lg:col-span-2', 'lg:col-span-3',
+    'md:col-span-1', 'md:col-span-2', 'md:col-span-3',
+    'sm:col-span-1', 'sm:col-span-2', 'sm:col-span-3',
+  ],
   theme: {
-  	extend: {
+    extend: {
   		colors: {
 			'dark-tangerine': '#ff9f1c',
 			'sea-buckthorn': '#ffbf69',
