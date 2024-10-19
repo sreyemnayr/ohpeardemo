@@ -12,6 +12,7 @@ const config: Config = {
     'lg:col-span-1', 'lg:col-span-2', 'lg:col-span-3',
     'md:col-span-1', 'md:col-span-2', 'md:col-span-3',
     'sm:col-span-1', 'sm:col-span-2', 'sm:col-span-3',
+	'text-xs', 'text-2xs',
   ],
   theme: {
     extend: {
@@ -73,6 +74,9 @@ const config: Config = {
   			sans: ['var(--font-quicksand)', 'Arial', 'Helvetica', 'sans-serif'],
   			logo: ['"hvd-comic-serif-pro"', 'serif'],
   		},
+		fontSize: {
+			xs: '0.625rem',
+		}
   	}
   },
   plugins: [require("tailwindcss-animate")],

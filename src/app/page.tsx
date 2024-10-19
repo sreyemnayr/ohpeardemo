@@ -1,12 +1,5 @@
-'use client'
+import { redirect } from 'next/navigation'
 
-import Dashboard from "@/components/Dashboard";
-import { FamilyProvider } from "@/context";
-
-export default function Home() {
-  return (
-    <FamilyProvider>
-      <Dashboard />
-    </FamilyProvider>
-  );
+export default async function Home() {
+  redirect('/dashboard');
 }

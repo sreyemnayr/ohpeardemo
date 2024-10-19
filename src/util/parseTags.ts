@@ -11,7 +11,7 @@ export interface ParsedTag {
   
   export function parseTags(input: string): ParseResult {
     const tagRegex = /<(\w+)(?: ([^>]+))?>([^<]*)<\/\1>/g;
-    const paramRegex = /(\w+)="([^"]+)"/g;
+    const paramRegex = /(\w+)=["']?([^"']+)["']?/g;
     const tags: ParsedTag[] = [];
   
     // Parse tags

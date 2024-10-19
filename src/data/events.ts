@@ -19,7 +19,7 @@ export type FamilyEvent = {
     title: string
     familyMembers: FamilyMemberType[]
     wholeFamily: boolean
-    location: string
+    location?: string
     transporting_to?: FamilyMemberType
     transporting_from?: FamilyMemberType
     adjustments?: string[]

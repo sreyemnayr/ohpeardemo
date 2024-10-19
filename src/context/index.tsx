@@ -1,16 +1,28 @@
+'use client'
+
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { family, FamilyType } from '@/data/familymembers'
 import { events, FamilyEvent, packingLists, PackingLists, PackingListItem } from '@/data/events'
 import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, addDays } from 'date-fns'
+import { parseDate } from 'chrono-node'
+import shortHash from "shorthash2";
+import { ParsedTag } from '@/util/parseTags';
 
 type DayOverview = {
   isTypical: boolean
   summary: string
-  hourlySchedule: { start: Date; end: Date; activity: string; location: string; notes?: string }[]
+  hourlySchedule: { start: Date; end: Date; activity: string; location?: string; notes?: string }[]
   packingList: string[]
   otherNotes: string[]
   atypicalEvents: string[]
   weatherConsiderations: string[]
+}
+
+export type Message = {
+  text?: string
+  Element?: React.ReactNode
+  sender: 'user' | 'assistant' | 'update'
+  command?: ParsedTag
 }
 
 interface FamilyContextType {
@@ -22,6 +34,10 @@ interface FamilyContextType {
   dayOverviews: Record<string, DayOverview>
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   updateEvent: (newEvent: FamilyEvent | Record<string, any>) => void
+  createEvent: (newEvent: FamilyEvent) => void
+  messages: Message[]
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  eventFromCommand: (command: ParsedTag) => FamilyEvent | null
 }
 
 const FamilyContext = createContext<FamilyContextType | undefined>(undefined)
@@ -38,6 +54,10 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
   const [activeDate, setActiveDate] = useState<Date>(new Date())
   const [daysInMonth, setDaysInMonth] = useState<Date[]>([])
   const [dayOverviews, setDayOverviews] = useState<Record<string, DayOverview>>({})
+  const [messages, setMessages] = useState<Message[]>([{
+    text: "Hello! How can I help you today?",
+    sender: 'assistant'
+  }])
 
   const [_events, setEvents] = useState<FamilyEvent[]>(events)
 
@@ -167,7 +187,57 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const updateEvent = (newEvent: FamilyEvent | Record<string, any>) => {
-    setEvents(_events.map(event => event.id === newEvent.id ? {...event, ...newEvent} : event))
+    console.log(newEvent)
+    setEvents((evs) => evs.map(event => event.id === newEvent.id ? {...event, ...newEvent} : event))
+  }
+
+  const createEvent = (newEvent: FamilyEvent) => {
+    setEvents((evs) => [...evs, {
+      ...newEvent, 
+      id: shortHash(newEvent.start.toISOString())
+    }])
+  }
+
+  const eventFromCommand = (command: ParsedTag) : FamilyEvent | null => {
+
+      
+    if (command.params?.type == "event" && command.params?.id) {
+      return _events.find(e => e.id === command.params?.id) ?? null
+    }
+    
+    const newEvent: FamilyEvent = {} as FamilyEvent
+    
+    if (command.params?.title) {
+      newEvent.title = command.params.title
+    } else {
+      return null
+    }
+    if (command.params?.date && command.params?.start && command.params?.end) {
+      newEvent.start = parseDate((command.params?.start ?? "") + " " + command.params.date) ?? new Date()
+      newEvent.end = parseDate((command.params?.end ?? "") + " " + command.params.date) ?? new Date()
+      
+    } else {
+      return null
+    }
+    if (command.params?.familymembers) {
+      newEvent.familyMembers = command.params.familymembers.split(",").map(name => family.members.find(f => f.name === name.trim()) ?? {name: name.trim(), role: "Child", activities: []})
+    } else {
+      return null
+    }
+    if (command.params?.location) {
+      newEvent.location = command.params.location
+    } else {
+      newEvent.location = "Unknown"
+    }
+    if (command.params?.transporting_to) {
+      newEvent.transporting_to = family.members.find(f => f.name === command.params.transporting_to)
+    }
+    if (command.params?.transporting_from) {
+      newEvent.transporting_from = family.members.find(f => f.name === command.params.transporting_from)
+    }
+    newEvent.id = shortHash(newEvent.title + newEvent.start.toISOString())
+    newEvent.special = true
+    return newEvent
   }
 
   return (
@@ -179,7 +249,11 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
         setActiveDate,
         daysInMonth,
         dayOverviews,
-        updateEvent
+        updateEvent,
+        createEvent,
+        messages,
+        setMessages,
+        eventFromCommand
       }}
     >
       {children}
