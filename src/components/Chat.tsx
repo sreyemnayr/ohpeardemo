@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Send, Check, Trash } from 'lucide-react'
 import Markdown from "react-markdown"
+import { parseDate } from 'chrono-node'
 
 import { useFamily } from '@/context'
 import { Message, ParsedTag, FamilyEvent } from '@/types'
@@ -82,7 +83,13 @@ export function Chat() {
         if (command.params?.field == "adjustments") {
           updateEvent({id: command.params.id, adjustments: [command.params.value]})
         } else {
-          if (["transporting_from", "transporting_to"].includes(command.params.field)) {
+          if (["start", "end"].includes(command.params.field)) {
+            console.log(command.params.value)
+            console.log(event.start.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }))
+            console.log(parseDate(`${command.params.value} ${event.start.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`))
+            
+            updateEvent({id: command.params.id, [command.params.field]: parseDate(`${command.params.value} ${event.start.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`), adjustments: [`UPDATED ${command.params.field}`]})
+          } else if (["transporting_from", "transporting_to"].includes(command.params.field)) {
             updateEvent({id: command.params.id, [command.params.field]: family.members.find(f => f.name === command.params.value), adjustments: [`UPDATED ${command.params.field}`]})
           } else if (["familyMembers"].includes(command.params.field)) {
             updateEvent({id: command.params.id, familyMembers: event.familyMembers.filter(fm => fm.name === command.params.value), adjustments: [`UPDATED ${command.params.field}`]})
