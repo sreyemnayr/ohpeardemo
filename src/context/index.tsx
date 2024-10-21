@@ -9,6 +9,38 @@ import shortHash from "shorthash2";
 import { ParsedTag, FamilyContextType, Message, Weather, FamilyEvent, PackingLists, PackingListItem, DayOverview } from '@/types';
 
 
+const pearOpeners = [
+  "I’m all ears (and stems)! Let’s chat about your plans!",
+  "Got a pearplexing question? Let’s sort it out together!",
+  "Feeling pearfectly helpful today—what can I do for you?",
+  "Juicy ideas on your mind? Let’s peel away at them together!",
+  "I’m here to help! Let’s make your day a little more pear-fect.",
+  "I’m here to make your life a little sweeter—what’s on the agenda?",
+  "Let’s pear down your to-do list—what needs tackling?",
+  "Got a pear of questions? I’ve got a bunch of answers!",
+  "Let’s pick out the ripest ideas together!",
+  "I’m ready to lend a stem—just tell me what you need!",
+  "I’m here to pear off the pressure! Where should we start?",
+  "Ready to plan things out and make your day pear-fect! How can I help?",
+  "Got a juicy question? I’m ready to help you get to the core!",
+  "Need some help? I’m ripe with ideas!",
+  "Let’s make today a little more pearsonal—what can I do for you?",
+  "Hope your day is pear-fect! How can I help you today?",
+  "Hello! Let’s find the pear-fect solution to whatever you need!",
+  "Good day! Let’s pear things up—what do you need?",
+  "Hey there! Ready to pear-form some magic together?",
+  "Top of the day to you! How can I make your day a little sweeter?",
+  "Hey there! How can I make today pear-fect for you?",
+  "Good day! I’m ripe and ready to lend a hand—what’s the plan?",
+  "Hey, pear-tner! What can I help with today?",
+  "Hello there! What can I do to pear-k up your day?",
+  "Good to see you! Let’s make your day sweeter—what do you need?",
+  "Hello! Let’s plan things pear-fectly together!",
+  "I’m here to help with any pear-tinent details. What's on your mind?",
+  "Hope your day is going smoothly! How can I lend a stem?",
+  "Happy day! Let’s get to the core of what you need help with!"  
+]
+
 const FamilyContext = createContext<FamilyContextType | undefined>(undefined)
 
 export function useFamily() {
@@ -24,7 +56,7 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
   const [daysInMonth, setDaysInMonth] = useState<Date[]>([])
   const [dayOverviews, setDayOverviews] = useState<Record<string, DayOverview>>({})
   const [messages, setMessages] = useState<Message[]>([{
-    text: "Hello! How can I help you today?",
+    text: pearOpeners[0],
     sender: 'assistant'
   }])
   const [weather, setWeather] = useState<Weather>({
@@ -40,6 +72,10 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     const startDate = startOfMonth(today)
     const endDate = endOfMonth(today)
     setDaysInMonth(eachDayOfInterval({ start: startDate, end: endDate }))
+    setMessages([{
+      text: pearOpeners[Math.floor(Math.random() * pearOpeners.length)],
+      sender: 'assistant'
+    }])
   }, [])
 
   useEffect(() => {
