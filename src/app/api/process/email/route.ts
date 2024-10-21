@@ -3,16 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { buildSystemPrompt } from "@/data/prompts";
 import { parseTags } from "@/util/parseTags";
 import { extractEmailDate } from "@/util/extractEmailDate";
-
+import { FamilyEvent } from "@/types";
 import OpenAI from "openai";
 const openai = new OpenAI();
 
 import { family } from "@/data/familymembers";
-import { events, packingLists } from "@/data/events";
+import { packingLists } from "@/data/events";
 
 export async function POST(req: NextRequest) {
     /* eslint-disable no-unused-vars */
-    const { message } = await req.json() as { message: string };
+    const { message, events } = await req.json() as { message: string, events: FamilyEvent[] };
 
     const userMessage = {
         role: "user",

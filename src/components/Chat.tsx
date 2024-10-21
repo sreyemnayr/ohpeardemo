@@ -115,7 +115,7 @@ export function Chat() {
 
     fetch('/api/process/email', {
       method: 'POST',
-      body: JSON.stringify({ message: emailMessage }),
+      body: JSON.stringify({ message: emailMessage, events: events }),
     }).then(res => res.json()).then(data => {
       const new_messages: Message[] = []
       new_messages.push({ text: data.message, sender: 'assistant' })
@@ -141,7 +141,7 @@ export function Chat() {
 
     fetch('/api/chat2', {
       method: 'POST',
-      body: JSON.stringify({ message: message }),
+      body: JSON.stringify({ message: message, events: events }),
     }).then(res => res.json()).then(data => {
       const new_messages: Message[] = []
       new_messages.push({ text: data.message, sender: 'assistant' })
