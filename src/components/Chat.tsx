@@ -116,9 +116,7 @@ export function Chat() {
       body: JSON.stringify({ message: emailMessage }),
     }).then(res => res.json()).then(data => {
       const new_messages: Message[] = []
-      data.message.split("\n").forEach((line: string) => {
-        new_messages.push({ text: line, sender: 'assistant' })
-      })
+      new_messages.push({ text: data.message, sender: 'assistant' })
       if (data?.commands) {
         (data.commands as ParsedTag[]).forEach(command => {
           new_messages.push({ Element: <EventAction command={command} handleCommand={handleCommand}  />, sender: 'update' })
@@ -144,10 +142,8 @@ export function Chat() {
       body: JSON.stringify({ message: message }),
     }).then(res => res.json()).then(data => {
       const new_messages: Message[] = []
-      
-      data.message.split("\n").forEach((line: string) => {
-        new_messages.push({ text: line, sender: 'assistant' })
-      })
+      new_messages.push({ text: data.message, sender: 'assistant' })
+
       
       if (data?.commands) {
         (data.commands as ParsedTag[]).forEach(command => {
