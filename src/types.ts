@@ -136,7 +136,7 @@ export interface FamilyContextType {
   }
 
 
-export type BotContext = "chat" | "email"
+export type BotContext = "chat" | "email" | "website"
 
 type RequiredDefault = {
     default: string[]
@@ -153,4 +153,12 @@ export type SystemParts = {
     responses: ContextRecord
     special_commands: ContextRecord
     example_commands: ContextRecord
+}
+
+
+export type Knowledge = {
+    family?: FamilyType
+    events?: FamilyEvent[]
+    packingLists?: PackingLists
+    now?: Date
 }

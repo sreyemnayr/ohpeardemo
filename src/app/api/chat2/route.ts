@@ -15,8 +15,6 @@ export async function POST(req: NextRequest) {
     /* eslint-disable no-unused-vars */
     // const { message, events } = await req.json() as { message: string, events: FamilyEvent[] };
     const { message, events } = superjson.parse(await req.text()) as { message: string, events: FamilyEvent[] };
-
-    console.log(events)
     
     const userMessage = {
         role: "user",

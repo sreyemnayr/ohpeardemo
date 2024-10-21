@@ -10,6 +10,8 @@ import { Message, ParsedTag, FamilyEvent } from '@/types'
 import { EventSummary } from '@/components/EventSummary'
 import { LogoBW } from '@/components/LogoBW'
 
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+
 import superjson from 'superjson'
 
 
@@ -51,6 +53,7 @@ export function EventAction({ command, handleCommand }: { command: ParsedTag, ha
 export function Chat() {
   const [message, setMessage] = useState('')
   const [emailMessage, setEmailMessage] = useState('')
+  const [websiteMessage, setWebsiteMessage] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -70,6 +73,11 @@ export function Chat() {
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     sendEmail()
+  }
+
+  const handleWebsiteSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    sendWebsite()
   }
 
   
@@ -125,6 +133,30 @@ export function Chat() {
     fetch('/api/process/email', {
       method: 'POST',
       body: superjson.stringify({ message: emailMessage, events: events }),
+    }).then(res => res.json()).then(data => {
+      const new_messages: Message[] = []
+      new_messages.push({ text: data.message, sender: 'assistant' })
+      if (data?.commands) {
+        (data.commands as ParsedTag[]).forEach(command => {
+          new_messages.push({ Element: <EventAction command={command} handleCommand={handleCommand}  />, sender: 'update' })
+        })
+      }
+      setMessages(prevMessages => [...prevMessages.filter(msg => msg.text !== waitingAssistantMessage.text), ...new_messages])
+    })
+  }
+
+  const sendWebsite = () => {
+    if (websiteMessage.trim() === '') return
+
+    const newUserMessage: Message = { text: `Process this website: \`${websiteMessage}\``, sender: 'user' }
+    const waitingAssistantMessage: Message = { text: '...', sender: 'assistant' }
+
+    setMessages(prevMessages => [...prevMessages, newUserMessage, waitingAssistantMessage])
+    setWebsiteMessage('')
+
+    fetch('/api/process/website', {
+      method: 'POST',
+      body: superjson.stringify({ url: websiteMessage, events: events }),
     }).then(res => res.json()).then(data => {
       const new_messages: Message[] = []
       new_messages.push({ text: data.message, sender: 'assistant' })
@@ -222,11 +254,28 @@ export function Chat() {
             <Send className="w-5 h-5" />
           </button>
         </form>
-        <h3 className="text-sm text-gun-metal">Or, send an email:</h3>
-        <form onSubmit={handleEmailSubmit} className="flex">
-          <input type="text" value={emailMessage} onChange={(e) => setEmailMessage(e.target.value)} placeholder="Paste your email here..." className="flex-grow px-4 py-2 border border-gun-metal rounded-l-lg focus:outline-none focus:ring-2 focus:ring-mint" name="emailMessage" />
-          <button type="submit" className="bg-mint text-white px-4 py-2 rounded-r-lg hover:bg-dark-tangerine transition-colors duration-200"><Send className="w-5 h-5" /></button>
-        </form>
+        <Accordion type="single" collapsible className="mt-2">
+          <AccordionItem value="other_sources">
+            <AccordionTrigger className="text-sm font-semibold text-white bg-mint px-4 py-1">
+              Other sources
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-2 shadow  shadow-gun-metal/20">
+            <>
+            <h3 className="text-sm text-gun-metal">Email (paste in original source):</h3>
+            <form onSubmit={handleEmailSubmit} className="flex">
+              <input type="text" value={emailMessage} onChange={(e) => setEmailMessage(e.target.value)} placeholder="Paste your email here..." className="flex-grow px-4 py-2 border border-gun-metal rounded-l-lg focus:outline-none focus:ring-2 focus:ring-mint" name="emailMessage" />
+              <button type="submit" className="bg-mint text-white px-4 py-2 rounded-r-lg hover:bg-dark-tangerine transition-colors duration-200"><Send className="w-5 h-5" /></button>
+            </form>
+            <h3 className="text-sm text-gun-metal">Website URL:</h3>
+            <form onSubmit={handleWebsiteSubmit} className="flex">
+              <input type="text" value={websiteMessage} onChange={(e) => setWebsiteMessage(e.target.value)} placeholder="Paste your website here..." className="flex-grow px-4 py-2 border border-gun-metal rounded-l-lg focus:outline-none focus:ring-2 focus:ring-mint" name="websiteMessage" />
+              <button type="submit" className="bg-mint text-white px-4 py-2 rounded-r-lg hover:bg-dark-tangerine transition-colors duration-200"><Send className="w-5 h-5" /></button>
+            </form>
+          </>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
       </div>
     </>
   );
