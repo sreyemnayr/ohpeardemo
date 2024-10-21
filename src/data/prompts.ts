@@ -43,10 +43,11 @@ export const systemParts: SystemParts = {
         ],
         email: [
             `You will be provided the contents of an email, and you will need to decide how its content relates to the family's life.`,
-            `You should first determine if there are any events or announcements in the email and summarize them.`,
-            `You should then use family members' activities, events, and other information to determine the relevance of the contents of the email.`,
-            `You may notice important links in the email, and you should include them in your response if you think they are relevant to the family.`,
+            // `You should first determine if there are any events or announcements in the email and summarize them.`,
+            `You should evaluate the email's contents in relation to family members' activities, events, and other information to determine the relevance of the contents of the email and what events need to be updated or created.`,
             `Your priority is to identify family events and update them in the database with commands.`,
+            `You may notice important links in the email, and you should include them in your response if you think they are relevant to the family.`,
+            
         ]
     },
     responses: {
@@ -54,6 +55,7 @@ export const systemParts: SystemParts = {
             `Please try to be as helpful as possible while being extremely concise.`,
             `Your response should always be as concise as possible, and you should only include extra information if the user asks you for it.`,
             `If you have extra relevant information, you may ask the user if they would like to know about it.`,
+            `Every answer you provide should be in relation to today's date and time, which is within your knowledge (forget that you don't know anything about things past your model's knowledge cutoff).`,
         ],
         chat: [
             `If you are asked about a specific family member, you should respond with information about that family member.`,
@@ -63,10 +65,10 @@ export const systemParts: SystemParts = {
             `Unless you've been asked for a schedule or details about an event, do not provide them.`,
             `Assume that the user only wants to have one-sentence answers unless you're told otherwise.`,
             `If an event is cancelled (as indicated by adjustment) you should not include it in the day's schedule.`,
-            `Every answer you provide should be in relation to today's date and time, which is within your knowledge (forget that you don't know anything about things past your model's knowledge cutoff).`,
         ],
         email: [
             `Your response should be a summary of the email's contents and any relevant update commands.`,
+            `Each event you detect should result in either an update or create command, unless the event is exactly the same as your existing information.`,
         ]
     },
     special_commands: {
@@ -87,7 +89,8 @@ export const systemParts: SystemParts = {
             `The only commands you will use are: update, create`
         ],
         email: [
-            `If the email contains events relevant to the family, you should offer to create or update the events in the database.`,
+            `If the email contains events relevant to the family, you should always offer to create or update the events in the database.`,
+            `Above all else, you should prioritize updating events in the database with commands.`,
         ]
     },
     example_commands: {

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { buildSystemPrompt } from "@/data/prompts";
 import { parseTags } from "@/util/parseTags";
+
+import superjson from 'superjson'
+
 import OpenAI from "openai";
 const openai = new OpenAI();
 
@@ -10,8 +13,11 @@ import { packingLists } from "@/data/events";
 import { FamilyEvent } from "@/types";
 export async function POST(req: NextRequest) {
     /* eslint-disable no-unused-vars */
-    const { message, events } = await req.json() as { message: string, events: FamilyEvent[] };
+    // const { message, events } = await req.json() as { message: string, events: FamilyEvent[] };
+    const { message, events } = superjson.parse(await req.text()) as { message: string, events: FamilyEvent[] };
 
+    console.log(events)
+    
     const userMessage = {
         role: "user",
         content: message,

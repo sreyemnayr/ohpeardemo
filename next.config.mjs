@@ -8,6 +8,9 @@ const nextConfig = {
     
         return config;
       },
+      experimental: {
+        swcPlugins: [["next-superjson-plugin", {}]],
+      },
 };
 
 export default nextConfig;

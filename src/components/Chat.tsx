@@ -10,6 +10,8 @@ import { Message, ParsedTag, FamilyEvent } from '@/types'
 import { EventSummary } from '@/components/EventSummary'
 import { LogoBW } from '@/components/LogoBW'
 
+import superjson from 'superjson'
+
 
 
 export function LoadingDots() {
@@ -87,7 +89,7 @@ export function Chat() {
             console.log(command.params.value)
             console.log(event.start.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }))
             console.log(parseDate(`${command.params.value} ${event.start.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`))
-            
+
             updateEvent({id: command.params.id, [command.params.field]: parseDate(`${command.params.value} ${event.start.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`), adjustments: [`UPDATED ${command.params.field}`]})
           } else if (["transporting_from", "transporting_to"].includes(command.params.field)) {
             updateEvent({id: command.params.id, [command.params.field]: family.members.find(f => f.name === command.params.value), adjustments: [`UPDATED ${command.params.field}`]})
@@ -122,7 +124,7 @@ export function Chat() {
 
     fetch('/api/process/email', {
       method: 'POST',
-      body: JSON.stringify({ message: emailMessage, events: events }),
+      body: superjson.stringify({ message: emailMessage, events: events }),
     }).then(res => res.json()).then(data => {
       const new_messages: Message[] = []
       new_messages.push({ text: data.message, sender: 'assistant' })
@@ -146,9 +148,11 @@ export function Chat() {
     setMessages(prevMessages => [...prevMessages, newUserMessage, waitingAssistantMessage])
     setMessage('')
 
+    console.log(superjson.stringify(events))
+
     fetch('/api/chat2', {
       method: 'POST',
-      body: JSON.stringify({ message: message, events: events }),
+      body: superjson.stringify({ message: message, events: events }),
     }).then(res => res.json()).then(data => {
       const new_messages: Message[] = []
       new_messages.push({ text: data.message, sender: 'assistant' })
