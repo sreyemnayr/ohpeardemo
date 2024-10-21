@@ -1,6 +1,6 @@
 import React from 'react'
 import { User, Pencil } from 'lucide-react'
-import { FamilyMemberType } from '@/data/familymembers'
+import { FamilyMemberType } from '@/types'
 
 export default function FamilyMember({
   familyMember,

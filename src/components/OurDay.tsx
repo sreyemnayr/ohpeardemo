@@ -2,7 +2,7 @@ import React from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, Umbrella, MapPin, Car, User } from 'lucide-react'
-import { FamilyMemberType } from '@/data/familymembers'
+import { FamilyMemberType } from '@/types'
 import { useFamily } from '@/context'
 import { format } from 'date-fns'
 import Checklist from './Checklist'
@@ -54,7 +54,7 @@ function FamilyMemberDay({ member }: { member: FamilyMemberType }) {
             )}{dayOverview.summary} for <span className="font-semibold text-xl">{member.name}</span></span>
             {dayOverview.atypicalEvents.length > 0 && (
           <div className="mb-2">
-            {dayOverview.atypicalEvents.map((event, index) => (
+            {dayOverview.atypicalEvents.filter((e,i,a)=>a.findIndex(e2=>(e==e2))==i).map((event, index) => (
                 <span key={index} className="ml-3 text-center lg:text-right"><span className="text-dark-tangerine"><AlertCircle className="w-4 h-4 mr-1  inline-block" /></span> {event}</span>
               ))}
             

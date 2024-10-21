@@ -1,4 +1,6 @@
-import { FamilyMemberType, family } from './familymembers'
+import { family } from './familymembers'
+import { FamilyEvent, PackingLists, FamilyMemberType } from '@/types'
+
 import { 
     startOfToday,
     startOfMonth,
@@ -7,34 +9,10 @@ import {
     setHours,
     getDay,
     setMinutes,
-    isSameDay,
  } from 'date-fns'
 
  import shortHash from "shorthash2";
 
-export type FamilyEvent = {
-    id: string
-    start: Date
-    end: Date
-    title: string
-    familyMembers: FamilyMemberType[]
-    wholeFamily: boolean
-    location?: string
-    transporting_to?: FamilyMemberType
-    transporting_from?: FamilyMemberType
-    adjustments?: string[]
-    special?: boolean
-}
-
-// Define the structure of packingLists
-export type PackingListItem = {
-    default: string[]
-    [key: string]: string[] // For member-specific items
-}
-  
-export type PackingLists = {
-    [key: string]: PackingListItem
-}
 
 const today = startOfToday()
 const dayOfWeek = getDay(today)
@@ -57,16 +35,19 @@ const mom = family.members.find(member => member.name === 'Mom') as FamilyMember
 const uncle_rad = family.members.find(member => member.name === 'Uncle Rad') as FamilyMemberType
 
 function seededRandom(seed: number) {
-    const x = Math.sin(seed*12345) * 10000;
+    const x = Math.sin(seed*123456) * 10000;
     return x - Math.floor(x);
 }
 
 for (const day of daysInMonth) {
-    const is_today = isSameDay(day, today)
     const is_weekday = getDay(day) >= 1 && getDay(day) <= 5
     // const is_weekend = getDay(day) === 0 || getDay(day) === 6
 
-    const random_special = seededRandom(Number(today) + Number(day) + getDay(day)) < 0.15
+    const random_special = seededRandom(Number(today) + Number(day) + getDay(day) ) < 0.15
+    const random_special_2 = seededRandom(Number(today) + Number(day) + getDay(day) + 777) < 0.25
+    const random_special_3 = seededRandom(Number(today) + Number(day) + getDay(day) + 888) < 0.15
+    const random_special_4 = seededRandom(Number(today) + Number(day) + getDay(day) + 999) < 0.3
+    const random_special_5 = seededRandom(Number(today) + Number(day) + getDay(day) + 666) < 0.1
 
     if (is_weekday) {
         events.push({
@@ -102,7 +83,7 @@ for (const day of daysInMonth) {
             familyMembers: [bluey],
             wholeFamily: false,
             location: "1001 Harrison Ave.",
-            adjustments: is_today ? ['CANCELLED'] : undefined,
+            adjustments: random_special_2 ? ["CANCELLED"] : undefined,
             transporting_to: mom,
             transporting_from: dad
         })
@@ -116,6 +97,7 @@ for (const day of daysInMonth) {
             familyMembers: [bluey],
             wholeFamily: false,
             location: "923 Napoleon Ave.",
+            adjustments: random_special_3 ? ["CANCELLED"] : undefined,
             transporting_from: mom
         })
         events.push({
@@ -127,7 +109,8 @@ for (const day of daysInMonth) {
             wholeFamily: false,
             location: "1001 Harrison Ave.",
             transporting_to: mom,
-            transporting_from: mom
+            transporting_from: mom,
+            adjustments: random_special_4 ? ["CANCELLED"] : undefined,
         })
         events.push({
             id: shortHash(`event_${seededRandom(event_id++)}`),
@@ -138,7 +121,8 @@ for (const day of daysInMonth) {
             wholeFamily: false,
             location: "1001 Harrison Ave.",
             transporting_to: dad,
-            transporting_from: dad
+            transporting_from: dad,
+            adjustments: random_special_5 ? ["CANCELLED"] : undefined,
         })
     }
     if (getDay(day) === dayOfWeek + (offset/2)) {
@@ -153,7 +137,7 @@ for (const day of daysInMonth) {
             transporting_from: dad
         })
     }
-    if (getDay(day) === 5) {
+    if (getDay(day) === 5 && random_special_4) {
         events.push({
             id: shortHash(`event_${seededRandom(event_id++)}`),
             start: setHours(day, 18),

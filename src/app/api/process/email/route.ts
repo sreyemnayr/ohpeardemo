@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { buildSystemPrompt } from "@/data/prompts";
 import { parseTags } from "@/util/parseTags";
+import { extractEmailDate } from "@/util/extractEmailDate";
+
 import OpenAI from "openai";
 const openai = new OpenAI();
 
@@ -17,7 +19,7 @@ export async function POST(req: NextRequest) {
         content: message,
     } as OpenAI.Chat.ChatCompletionUserMessageParam;
 
-    const systemMessage = buildSystemPrompt("chat", {now: new Date(), family: family, events: events, packingLists: packingLists})
+    const systemMessage = buildSystemPrompt("email", {now: extractEmailDate(message) ?? new Date(), family: family, events: events, packingLists: packingLists})
     
     const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini-2024-07-18",

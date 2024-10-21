@@ -1,4 +1,4 @@
-import { FamilyEvent } from '@/data/events'
+import { FamilyEvent } from '@/types'
 import { format } from 'date-fns'
 import * as Tooltip from '@radix-ui/react-tooltip'
 

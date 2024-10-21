@@ -4,10 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { Send, Check, Trash } from 'lucide-react'
 import Markdown from "react-markdown"
 
-import { useFamily, Message } from '@/context'
-import { ParsedTag } from '@/util/parseTags'
+import { useFamily } from '@/context'
+import { Message, ParsedTag, FamilyEvent } from '@/types'
 import { EventSummary } from '@/components/EventSummary'
-import { FamilyEvent } from '@/data/events'
+import { LogoBW } from '@/components/LogoBW'
 
 
 
@@ -15,9 +15,9 @@ export function LoadingDots() {
   return (
   <div className='flex space-x-2 justify-center items-center'>
  	<span className='sr-only'>Loading...</span>
-  	<div className='h-1 w-1 bg-gun-metal rounded-full animate-bounce [animation-delay:-0.3s]'></div>
-	<div className='h-1 w-1 bg-gun-metal rounded-full animate-bounce [animation-delay:-0.15s]'></div>
-	<div className='h-1 w-1 bg-gun-metal rounded-full animate-bounce'></div>
+  	<LogoBW className='h-3 w-3 text-gun-metal animate-bounce [animation-delay:-0.3s]'></LogoBW>
+	<LogoBW className='h-3 w-3 text-gun-metal animate-bounce [animation-delay:-0.15s]'></LogoBW>
+	<LogoBW className='h-3 w-3 text-gun-metal animate-bounce'></LogoBW>
 </div>
   )
 }
@@ -47,7 +47,7 @@ export function EventAction({ command, handleCommand }: { command: ParsedTag, ha
 
 export function Chat() {
   const [message, setMessage] = useState('')
-  
+  const [emailMessage, setEmailMessage] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -59,9 +59,14 @@ export function Chat() {
 
   useEffect(scrollToBottom, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     sendMessage()
+  }
+
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    sendEmail()
   }
 
   
@@ -95,6 +100,32 @@ export function Chat() {
         }
       }
     }
+  }
+
+  const sendEmail = () => {
+    if (emailMessage.trim() === '') return
+
+    const newUserMessage: Message = { text: "Process this email", sender: 'user' }
+    const waitingAssistantMessage: Message = { text: '...', sender: 'assistant' }
+
+    setMessages(prevMessages => [...prevMessages, newUserMessage, waitingAssistantMessage])
+    setEmailMessage('')
+
+    fetch('/api/process/email', {
+      method: 'POST',
+      body: JSON.stringify({ message: emailMessage }),
+    }).then(res => res.json()).then(data => {
+      const new_messages: Message[] = []
+      data.message.split("\n").forEach((line: string) => {
+        new_messages.push({ text: line, sender: 'assistant' })
+      })
+      if (data?.commands) {
+        (data.commands as ParsedTag[]).forEach(command => {
+          new_messages.push({ Element: <EventAction command={command} handleCommand={handleCommand}  />, sender: 'update' })
+        })
+      }
+      setMessages(prevMessages => [...prevMessages.filter(msg => msg.text !== waitingAssistantMessage.text), ...new_messages])
+    })
   }
 
 
@@ -165,7 +196,7 @@ export function Chat() {
           ))}
           <div ref={messagesEndRef} />
         </div>
-        <form onSubmit={handleSubmit} className="flex">
+        <form onSubmit={handleChatSubmit} className="flex">
           <input
             type="text"
             value={message}
@@ -181,6 +212,11 @@ export function Chat() {
           >
             <Send className="w-5 h-5" />
           </button>
+        </form>
+        <h3 className="text-sm text-gun-metal">Or, send an email:</h3>
+        <form onSubmit={handleEmailSubmit} className="flex">
+          <input type="text" value={emailMessage} onChange={(e) => setEmailMessage(e.target.value)} placeholder="Paste your email here..." className="flex-grow px-4 py-2 border border-gun-metal rounded-l-lg focus:outline-none focus:ring-2 focus:ring-mint" name="emailMessage" />
+          <button type="submit" className="bg-mint text-white px-4 py-2 rounded-r-lg hover:bg-dark-tangerine transition-colors duration-200"><Send className="w-5 h-5" /></button>
         </form>
       </div>
     </>

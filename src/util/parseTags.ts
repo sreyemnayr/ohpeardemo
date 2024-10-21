@@ -1,13 +1,4 @@
-export interface ParsedTag {
-    name: string;
-    params: Record<string, string>;
-    content: string;
-  }
-  
-  export interface ParseResult {
-    tags: ParsedTag[];
-    cleanedString: string;
-  }
+import { ParsedTag, ParseResult } from "@/types";
   
   export function parseTags(input: string): ParseResult {
     const tagRegex = /<(\w+)(?: ([^>]+))?>([^<]*)<\/\1>/g;

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FamilyEvent } from '@/data/events'
+import { FamilyEvent } from '@/types'
 import { format, isSameDay, addDays, isBefore, startOfDay, getDay } from 'date-fns'
 import { useFamily } from '@/context'
 import * as Tooltip from '@radix-ui/react-tooltip'

@@ -76,6 +76,13 @@ const config: Config = {
   		},
 		fontSize: {
 			xs: '0.625rem',
+		},
+		keyframes: {
+			bounce: {
+				'0%, 100%': { transform: 'translateY(-50%)', opacity: '0.2' },
+				'65%': { opacity: '0.9' },
+				'50%': { transform: 'translateY(0)', opacity: '1' }
+			}
 		}
   	}
   },

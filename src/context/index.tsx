@@ -1,44 +1,13 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { family, FamilyType } from '@/data/familymembers'
-import { events, FamilyEvent, packingLists, PackingLists, PackingListItem } from '@/data/events'
-import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, addDays } from 'date-fns'
+import { family } from '@/data/familymembers'
+import { events, packingLists } from '@/data/events'
+import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, addDays, getDay } from 'date-fns'
 import { parseDate } from 'chrono-node'
 import shortHash from "shorthash2";
-import { ParsedTag } from '@/util/parseTags';
+import { ParsedTag, FamilyContextType, Message, Weather, FamilyEvent, PackingLists, PackingListItem, DayOverview } from '@/types';
 
-type DayOverview = {
-  isTypical: boolean
-  summary: string
-  hourlySchedule: { start: Date; end: Date; activity: string; location?: string; notes?: string }[]
-  packingList: string[]
-  otherNotes: string[]
-  atypicalEvents: string[]
-  weatherConsiderations: string[]
-}
-
-export type Message = {
-  text?: string
-  Element?: React.ReactNode
-  sender: 'user' | 'assistant' | 'update'
-  command?: ParsedTag
-}
-
-interface FamilyContextType {
-  family: FamilyType
-  events: FamilyEvent[]
-  activeDate: Date
-  setActiveDate: React.Dispatch<React.SetStateAction<Date>>
-  daysInMonth: Date[]
-  dayOverviews: Record<string, DayOverview>
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  updateEvent: (newEvent: FamilyEvent | Record<string, any>) => void
-  createEvent: (newEvent: FamilyEvent) => void
-  messages: Message[]
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
-  eventFromCommand: (command: ParsedTag) => FamilyEvent | null
-}
 
 const FamilyContext = createContext<FamilyContextType | undefined>(undefined)
 
@@ -58,6 +27,10 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     text: "Hello! How can I help you today?",
     sender: 'assistant'
   }])
+  const [weather, setWeather] = useState<Weather>({
+    precipitation: "NONE",
+    temperature: 80
+  })
 
   const [_events, setEvents] = useState<FamilyEvent[]>(events)
 
@@ -73,18 +46,26 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     const startDate = startOfMonth(activeDate)
     const endDate = endOfMonth(activeDate)
     setDaysInMonth(eachDayOfInterval({ start: startDate, end: endDate }))
+    const today = new Date()
+    const temperature = isSameDay(today, activeDate) ? 81 : isSameDay(addDays(today, 1), activeDate) ? 62 : isSameDay(addDays(today, 2), activeDate) ? 43 : getDay(activeDate) + 70
+    const precipitation = isSameDay(today, activeDate) ? "NONE" : isSameDay(addDays(today, 1), activeDate) ? "RAIN" : isSameDay(addDays(today, 2), activeDate) ? "HAIL" : undefined
+    setWeather({
+      precipitation: precipitation,
+      temperature: temperature
+    })
   }, [activeDate])
 
   useEffect(() => {
     const newDayOverviews: Record<string, DayOverview> = {}
 
-    const today = new Date()
-
     // const is_today = isSameDay(today, activeDate)
-    const is_tomorrow = isSameDay(addDays(today, 1), activeDate)
-    const is_next_week = isSameDay(addDays(today, 7), activeDate)
+    // const is_tomorrow = isSameDay(addDays(today, 1), activeDate)
+    // const is_next_week = isSameDay(addDays(today, 7), activeDate)
 
-    const weather_considerations = is_tomorrow ? ["RAIN"] : is_next_week ? ["COLD"] : []
+    const weather_considerations: string[] = weather.precipitation ? [weather.precipitation] : []
+    if (weather.temperature && weather.temperature < 50) {
+      weather_considerations.push("COLD")
+    }
 
     family.members.forEach(member => {
       const memberEvents = _events.filter(event => 
@@ -183,7 +164,7 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     })
 
     setDayOverviews(newDayOverviews)
-  }, [activeDate, family, _events])
+  }, [activeDate, family, _events, weather])
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const updateEvent = (newEvent: FamilyEvent | Record<string, any>) => {
@@ -253,7 +234,8 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
         createEvent,
         messages,
         setMessages,
-        eventFromCommand
+        eventFromCommand,
+        weather
       }}
     >
       {children}
