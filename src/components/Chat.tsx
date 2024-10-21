@@ -95,7 +95,9 @@ export function Chat() {
     if (command.name == "create") {
       if (command.params?.type == "event") {
         const newEvent = eventFromCommand(command)
+        
         if (newEvent) {
+          newEvent.special = true
           createEvent(newEvent)
         }
       }
