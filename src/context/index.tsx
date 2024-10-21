@@ -164,7 +164,7 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     })
 
     setDayOverviews(newDayOverviews)
-  }, [activeDate, family, _events, weather])
+  }, [activeDate, _events, weather])
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const updateEvent = (newEvent: FamilyEvent | Record<string, any>) => {
