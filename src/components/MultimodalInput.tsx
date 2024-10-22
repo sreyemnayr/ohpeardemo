@@ -21,15 +21,25 @@ import { Textarea } from "@/components/ui/textarea";
 
 const suggestedActions = [
   {
-    title: "What is the weather",
-    label: "in San Francisco?",
-    action: "What is the weather in San Francisco?",
+    title: "What's happening ",
+    label: "this week?",
+    action: "What's going on with the family this week?",
   },
   {
-    title: "Answer like I'm 5,",
-    label: "why is the sky blue?",
-    action: "Answer like I'm 5, why is the sky blue?",
+    title: "Who's driving",
+    label: "today?",
+    action: "Who is driving to and from which events today?",
   },
+  {
+    title: "What do we need",
+    label: "to bring today?",
+    action: "What are we packing for today's events?",
+  },
+  {
+    title: "Make me laugh",
+    label: "please!",
+    action: "Tell me a joke!",
+  }
 ];
 
 export function MultimodalInput({
@@ -174,7 +184,7 @@ export function MultimodalInput({
                       content: suggestedAction.action,
                     });
                   }}
-                  className="w-full text-left border border-white dark:border-gun-metal text-raisin-black dark:text-white rounded-lg p-2 text-sm hover:bg-white dark:hover:bg-raisin-black transition-colors flex flex-col"
+                  className="w-full text-left border border-turquoise dark:border-gun-metal text-raisin-black dark:text-white rounded-lg p-2 text-sm hover:bg-white dark:hover:bg-raisin-black transition-colors flex flex-col hover:border-mint"
                 >
                   <span className="font-medium">{suggestedAction.title}</span>
                   <span className="text-zinc-500 dark:text-zinc-400">
