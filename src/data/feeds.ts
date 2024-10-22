@@ -34,8 +34,9 @@ type Feed = {
 export const builtin_feeds: Feed[] = [
     { name: 'Family E-Mail Sink', type: 'Email', description: 'Send e-mails to this address to tell OhPear about their contents.', id: 'n1go7@tellohpear.com', Icon: Mailbox },
     
-    { name: 'SMS Sink', type: 'SMS', description: 'Send SMS messages to this address to tell OhPear about their contents.', id: '+15041234567', Icon: MessageCircle },
-    { name: 'Voice Call Transcription', type: 'Voice', description: 'Connect your voice call transcription service to sync your voicemails.', id: '+15041234567', Icon: Mic },
+    { name: 'SMS Sink', type: 'SMS', description: 'Send SMS messages to this address to tell OhPear about their contents.', id: 'sms:+1 504 504 5272', Icon: MessageCircle },
+
+    { name: 'Voice Call Transcription', type: 'Voice', description: 'Leave a voice message to tell OhPear something.', id: 'voice:+1 504 504 5272', Icon: Mic },
   ]
 
 export const custom_feeds: Feed[] = [

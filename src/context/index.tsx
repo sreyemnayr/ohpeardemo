@@ -6,7 +6,26 @@ import { events, packingLists } from '@/data/events'
 import { startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, addDays, getDay } from 'date-fns'
 import { parseDate } from 'chrono-node'
 import shortHash from "shorthash2";
-import { ParsedTag, FamilyContextType, Message, Weather, FamilyEvent, PackingLists, PackingListItem, DayOverview } from '@/types';
+import { ParsedTag, Message, Weather, FamilyEvent, PackingLists, PackingListItem, DayOverview, FamilyType } from '@/types';
+import { CoreToolResult } from 'ai'
+import superjson from 'superjson'
+
+export interface FamilyContextType {
+  family: FamilyType
+  events: FamilyEvent[]
+  activeDate: Date
+  setActiveDate: React.Dispatch<React.SetStateAction<Date>>
+  daysInMonth: Date[]
+  dayOverviews: Record<string, DayOverview>
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  updateEvent: (newEvent: FamilyEvent | Record<string, any>) => void
+  createEvent: (newEvent: FamilyEvent) => void
+  messages: Message[]
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  eventFromCommand: (command: ParsedTag) => FamilyEvent | null
+  weather: Weather
+  eventFromToolCall: (toolCall: CoreToolResult<string, any, any>) => FamilyEvent | null
+}
 
 
 const pearOpeners = [
@@ -215,6 +234,79 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     }])
   }
 
+  const eventFromToolCall = (toolCall: CoreToolResult<string, any, any>) => {
+    console.log("TOOL CALL")
+    console.log(toolCall)
+    console.log("ARG KEYS")
+    console.log(Object.keys(toolCall.args))
+
+    let event: FamilyEvent = {} as FamilyEvent
+    if (toolCall.toolName === "updateEvent") {
+      event = superjson.deserialize(superjson.serialize(_events.find(e => e.id === toolCall.args?.id) ?? {} as FamilyEvent))
+      if (!event) return null
+    }
+
+    if (toolCall.args?.start_time) {
+      event.start = parseDate(
+        `${toolCall.args?.start_time} ${toolCall.args?.date ?? event.start ?? new Date()}`) ?? new Date()
+    } 
+    if (toolCall.args?.end_time) {
+      event.end = parseDate(`${toolCall.args?.end_time} ${toolCall.args?.date ?? event.end ?? new Date()}`) ?? new Date()
+    }
+
+    if (toolCall.args?.transporting_to) {
+      event.transporting_to = family.members.find(f => f.name === toolCall.args?.transporting_to)
+    }
+    if (toolCall.args?.transporting_from) {
+      event.transporting_from = family.members.find(f => f.name === toolCall.args?.transporting_from)
+    }
+
+    if (toolCall.args?.familyMembers_add){
+      event.familyMembers = [...event.familyMembers, ...toolCall.args.familyMembers_add.map((name: string) => family.members.find(f => f.name === name.trim()) ?? {name: name.trim(), role: "Child", activities: []})]
+    }
+    if (toolCall.args?.familyMembers_remove){
+      event.familyMembers = event.familyMembers.filter(fm => !toolCall.args.familyMembers_remove.includes(fm.name))
+    }
+
+    if (toolCall.args?.adjustments_add){
+      event.adjustments = event.adjustments ? [...event.adjustments, ...toolCall.args.adjustments_add] : toolCall.args.adjustments_add
+    }
+    if (toolCall.args?.adjustments_remove){
+      event.adjustments = event.adjustments ? event.adjustments.filter(adj => !toolCall.args.adjustments_remove.includes(adj)) : []
+    }
+
+
+
+
+    if (toolCall.args?.familyMembers) {
+      event.familyMembers = toolCall.args.familyMembers.map((name: string) => family.members.find(f => f.name === name.trim()) ?? {name: name.trim(), role: "Child", activities: []})
+    }
+      
+    for (const key of Object.keys(toolCall.args)) {
+      
+      if (!["transporting_to", "transporting_from"].includes(key)) {
+
+        const validKeys: (keyof FamilyEvent)[] = ["start", "end", "title", "wholeFamily", "location", "special"];
+
+        for (const key of Object.keys(toolCall.args)) {
+          if (validKeys.includes(key as keyof FamilyEvent) && toolCall.args[key] !== undefined) {
+            (event as any)[key] = toolCall.args[key];
+          }
+        }
+      
+      }
+
+      
+
+      
+    }
+
+    console.log("EVENT")
+    console.log(event)
+    return event
+  
+}
+
   const eventFromCommand = (command: ParsedTag) : FamilyEvent | null => {
 
       
@@ -271,7 +363,8 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
         messages,
         setMessages,
         eventFromCommand,
-        weather
+        weather,
+        eventFromToolCall
       }}
     >
       {children}

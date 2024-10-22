@@ -1,6 +1,6 @@
 'use client'
 
-import { Chat } from '@/components/Chat'
+import { Chat } from '@/components/ChatSDK'
 import FamilyCalendar from '@/components/FamilyCalendar'
 import FamilyMember from '@/components/FamilyMember'
 import { familyMembers } from '@/data/familymembers'

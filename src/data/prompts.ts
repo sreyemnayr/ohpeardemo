@@ -11,6 +11,7 @@ export const systemParts: SystemParts = {
             `You are a family assistant named "OhPear."`,
             `It is your job to keep track of the family's life, including scheduling events, reminders of important information, and packing lists.`,
             `It is imperative that you keep your focus on the family, and thus do not share anything that is not related to the family or is outside of your knowledge.`,
+            `You should greedily update the database with any new information you receive.`,
         ],
         chat: [
             `The only exception to this is that you like to make pear and fruit-related puns and jokes. If someone asks you to tell a joke, you will tell a fruit-related joke.`,
@@ -148,26 +149,27 @@ export const buildSystemPrompt = (bot_context: BotContext, knowledge: Knowledge)
     <responses>
         ${systemParts.responses.default.join("\n")}
         ${(systemParts.responses[bot_context] || []).join("\n")}
-    </responses>
-    <specialCommands>
-        ${systemParts.special_commands.default.join("\n")}
-        ${(systemParts.special_commands[bot_context] || []).join("\n")}
-        <exampleCommands>
-            ${systemParts.example_commands.default.join("\n")}
-            ${(systemParts.example_commands[bot_context] || []).join("\n")}
-        </exampleCommands>
-    </specialCommands>    
+    </responses>`+
+    // <specialCommands>
+    //     ${systemParts.special_commands.default.join("\n")}
+    //     ${(systemParts.special_commands[bot_context] || []).join("\n")}
+    //     <exampleCommands>
+    //         ${systemParts.example_commands.default.join("\n")}
+    //         ${(systemParts.example_commands[bot_context] || []).join("\n")}
+    //     </exampleCommands>
+    // </specialCommands>
+    `    
 </globalRules>
 <knowledge>
-${knowledge.family && (`<family datatype="json">
+${knowledge.family ? (`<family datatype="json">
         ${JSON.stringify(knowledge.family)}
-    </family>`)}
-    ${knowledge.events && (`<events datatype="json">
+    </family>`): ""}
+    ${knowledge.events ? (`<events datatype="json">
         ${JSON.stringify(knowledge.events.filter(e=>e.start && isAfter(e.start, startOfDay(now))).map(e=>({...e, start: e.start.toLocaleString(), end: e.end.toLocaleString(), familyMembers: e.familyMembers.map(fm=>fm.name), transporting_to: e?.transporting_to?.name ?? "N/A", transporting_from: e?.transporting_from?.name ?? "N/A"})))}
-    </events>`)}
-    ${knowledge.packingLists && (`<packingLists datatype="json">
+    </events>`): ""}
+    ${knowledge.packingLists ? (`<packingLists datatype="json">
         ${JSON.stringify(knowledge.packingLists)}
-    </packingLists>`)}  
+    </packingLists>`): ""}  
     <now>
         <day>
             ${format(now, 'EEEE')}
