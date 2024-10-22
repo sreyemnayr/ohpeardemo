@@ -58,7 +58,7 @@ export function Chat() {
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
   
-  const { updateEvent, createEvent, events, eventFromToolCall } = useFamily()
+  const { updateEvent, createEvent, events, eventFromToolCall, messages: _messages } = useFamily()
 
   const [toolCalls, setToolCalls] = useState<Array<any>>([])
 
@@ -116,12 +116,9 @@ export function Chat() {
   return (
     <>
       <div className="bg-white shadow rounded-lg p-2">
-        <div className="h-96 bg-turquoise rounded-lg mb-4 overflow-y-auto flex flex-col items-center">
-        <div
-          
-          className="flex flex-col gap-4 h-full pt-4 w-full items-center overflow-y-scroll overflow-x-hidden"
-        >
-          {messages.length === 0 && <div>Empty Chat </div>}
+        <div className="h-96 bg-turquoise rounded-lg mb-4 pt-4 overflow-y-auto flex flex-col items-center">
+        
+        <PreviewMessage role="assistant" content={_messages?.[0].text || ""} />
 
           {messages.map((message) => (
             <>
@@ -140,7 +137,7 @@ export function Chat() {
             </>
           ))}
 
-          <div
+        <div
             ref={messagesEndRef}
             className="shrink-0 min-w-[24px] min-h-[24px]"
           />
@@ -160,7 +157,7 @@ export function Chat() {
           />
         </form>
           <div ref={messagesEndRef} />
-        </div>
+        
         
         
         

@@ -20,13 +20,18 @@ export const Message = ({
 
   return (
     <motion.div
-      className={`flex mb-4 text-sm gap-4 px-4 w-full max-w-[85%] ${role === 'user' ? 'justify-end bg-mint text-white rounded-br-none' : 'justify-start bg-white text-gun-metal rounded-bl-none'} `}
+      className={`flex mb-4 text-sm gap-4 px-4 w-full ${role === 'user' ? 'justify-end ' : 'justify-start'} `}
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
     >
-      {content && <Markdown>{content as string}</Markdown>}
+        <div
+      className={`max-w-[85%] rounded-lg p-1 ${role === 'user' ? 'justify-end bg-mint text-white  rounded-br-none' : 'justify-start bg-white text-gun-metal rounded-bl-none'} `}>
 
-      <div className="max-w-full bg-gun-metal text-white rounded shadow-md outline outline-1 outline-white">
+      
+      {content && <Markdown>{content as string}</Markdown>}
+      </div>
+
+      
         
         {/* {toolInvocations && (
           <>
@@ -61,7 +66,6 @@ export const Message = ({
             ))}
           </div>
         )}
-      </div>
     </motion.div>
   );
 };
